@@ -2,14 +2,14 @@ import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
-  uri: "https://simple-web-community.herokuapp.com/",
+  uri: "http://localhost:3000/",
 });
 
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: localStorage("token") || "",
+      authorization: localStorage.getItem(process.env.SECRET_KEY) || "",
     },
   };
 });

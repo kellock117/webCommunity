@@ -3,8 +3,8 @@ import { useForm } from "../util/hooks";
 import { AuthContext } from "../context/authContext";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { useNavigate } from "react-router-dom";
 
+// material ui for designing
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -18,25 +18,20 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
-
 const theme = createTheme();
 
-export default function Register(props) {
+export default function Login(props) {
   const context = useContext(AuthContext);
-  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
-  const { onChange, onSubmit, values } = useForm(createUserCallBack, {
+  const { onChange, onSubmit, values } = useForm(loginUserCallback, {
     id: "",
     password: "",
-    confirmPassword: "",
   });
 
-  const [createUser, { loading }] = useMutation(GQL_REGISTER, {
-    update(_, { data: { createUser: userData } }) {
+  const [loginUser, { loading }] = useMutation(GQL_LOGIN, {
+    update(_, { data: { login: userData } }) {
       context.login(userData);
-      window.alert("Creation Successful");
-      navigate("/");
     },
     onError(error) {
       setErrors(error.message);
@@ -44,8 +39,8 @@ export default function Register(props) {
     variables: values,
   });
 
-  function createUserCallBack() {
-    createUser();
+  function loginUserCallback() {
+    loginUser();
   }
 
   return (
@@ -65,62 +60,46 @@ export default function Register(props) {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign up
+              Sign in
             </Typography>
-            <Box component="form" onSubmit={onSubmit} sx={{ mt: 3 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="id"
-                    label="ID"
-                    name="id"
-                    autoFocus
-                    onChange={onChange}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                    onChange={onChange}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="confirmPassword"
-                    label="Confirm Password"
-                    type="password"
-                    id="confirmPassword"
-                    onChange={onChange}
-                  />
-                </Grid>
-              </Grid>
+            <Box component="form" onSubmit={onSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="id"
+                label="ID"
+                name="id"
+                autoFocus
+                onChange={onChange}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                onChange={onChange}
+              />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign Up
+                Sign In
               </Button>
               {errors.length > 0 ? (
                 <Alert severity="error">{errors}</Alert>
               ) : (
                 ""
               )}
-              <Grid container justifyContent="flex-end">
+              <Grid container>
                 <Grid item>
-                  <Link href="/" variant="body2">
-                    Already have an account? Sign in
+                  <Link href="/register" variant="body2">
+                    {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
               </Grid>
@@ -134,19 +113,9 @@ export default function Register(props) {
   );
 }
 
-const GQL_REGISTER = gql`
-  mutation createUserCallback(
-    $id: String!
-    $password: String!
-    $confirmPassword: String!
-  ) {
-    createUser(
-      registerInput: {
-        id: $id
-        password: $password
-        confirmPassword: $confirmPassword
-      }
-    ) {
+const GQL_LOGIN = gql`
+  mutation loginUserCallback($id: String!, $password: String!) {
+    login(loginInput: { id: $id, password: $password }) {
       id
       token
     }

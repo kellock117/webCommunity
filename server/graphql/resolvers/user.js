@@ -32,7 +32,7 @@ module.exports = {
       { registerInput: { id, password, confirmPassword } }
     ) => {
       // check if the user already exists
-      const oldUser = await User.findById(id);
+      const oldUser = await User.findOne({ id: id });
       if (oldUser) {
         throw new UserInputError("id already exists");
       }
@@ -64,7 +64,7 @@ module.exports = {
       loginValidCheck(id, password);
 
       // find user by id and check whether it exists
-      const user = await User.findById(id);
+      const user = await User.findOne({ id: id });
       if (!user) throw new UserInputError("id does not exist");
 
       // compare input password to user's password

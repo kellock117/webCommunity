@@ -5,11 +5,13 @@ const initialState = {
   user: null,
 };
 
-if (localStorage.getItem("token")) {
-  const decodedToken = jwtDecode(localStorage.getItem("token"));
+if (localStorage.getItem(process.env.REACT_APP_KEY)) {
+  const decodedToken = jwtDecode(
+    localStorage.getItem(process.env.REACT_APP_KEY)
+  );
 
   if (decodedToken.exp * 1000 < Date.now()) {
-    localStorage.removeItem("token");
+    localStorage.removeItem(process.env.REACT_APP_KEY);
   } else {
     initialState.user = decodedToken;
   }
@@ -42,7 +44,7 @@ function AuthProvider(props) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   const login = userData => {
-    localStorage.setItem("token", userData.token);
+    localStorage.setItem(process.env.REACT_APP_KEY, userData.token);
     dispatch({
       type: "LOGIN",
       payload: userData,
@@ -50,7 +52,7 @@ function AuthProvider(props) {
   };
 
   function logout() {
-    localStorage.removeItem("token");
+    localStorage.removeItem(process.env.REACT_APP_KEY);
     dispatch({ type: "LOGOUT" });
   }
 
