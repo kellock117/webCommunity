@@ -20,12 +20,6 @@ function generateToken(user) {
 }
 
 module.exports = {
-  Query: {
-    getUsers: async () => {
-      const users = await User.find();
-      return users;
-    },
-  },
   Mutation: {
     createUser: async (
       _,

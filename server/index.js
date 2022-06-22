@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const { ApolloServer } = require("apollo-server");
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "./.env") });
 
 const PORT = process.env.PORT || 5000;
 

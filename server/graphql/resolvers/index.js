@@ -4,7 +4,6 @@ const commentResolver = require("./comment.js");
 
 module.exports = {
   Query: {
-    ...userResolver.Query,
     ...postResolver.Query,
     ...commentResolver.Query,
   },

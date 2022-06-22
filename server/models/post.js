@@ -6,7 +6,7 @@ const postSchema = new Schema({
   userID: String,
   content: String,
   time: String,
-  likes: Number,
+  likes: [String],
   comments: commentSchema.schema,
 });
 
