@@ -5,11 +5,11 @@ const httpLink = createHttpLink({
   uri: "http://localhost:3000/",
 });
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext(() => {
+  const token = localStorage.getItem(process.env.REACT_APP_KEY);
   return {
     headers: {
-      ...headers,
-      authorization: localStorage.getItem(process.env.SECRET_KEY) || "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
   };
 });

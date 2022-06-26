@@ -15,13 +15,13 @@ module.exports = gql`
     comments: [Comment]
   }
   type Comment {
-    id: ID!
+    userID: String!
     content: String!
     time: String!
     likes: [String]
   }
   type Query {
-    getPosts: [Post]
+    getAllPosts: [Post]
     getComments: [Comment]
   }
   input RegisterInput {

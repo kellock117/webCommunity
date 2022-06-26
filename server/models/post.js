@@ -6,8 +6,12 @@ const postSchema = new Schema({
   userID: String,
   content: String,
   time: String,
-  likes: [String],
-  comments: commentSchema.schema,
+  likes: { type: [String], default: null },
+  comments: {
+    type: Schema.Types.ObjectId,
+    ref: "comment",
+    default: null,
+  },
 });
 
 module.exports = model("post", postSchema);
