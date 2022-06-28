@@ -31,7 +31,6 @@ export default function Login(props) {
 
   const [loginUser, { loading }] = useMutation(GQL_LOGIN, {
     update(_, { data: { login: userData } }) {
-      console.log(userData);
       context.login(userData);
     },
     onError(error) {

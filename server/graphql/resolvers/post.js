@@ -17,12 +17,12 @@ module.exports = {
   Mutation: {
     createPost: async (_, { createPostInput: { title, content } }, context) => {
       // check validation
-      // const user = checkAuth(context);
-      const temp = "dd";
+      const user = checkAuth(context);
+
       postValidCheck(title, content);
       const post = new Post({
         title: title,
-        userID: temp,
+        userID: user.id,
         content: content,
         time: new Date().toISOString(),
       });

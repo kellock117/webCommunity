@@ -9,7 +9,6 @@ import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme();
@@ -20,7 +19,7 @@ export default function NewPost(props) {
     content: "",
   });
 
-  const [createPost, { loading }] = useMutation(GQL_CREATE_POST, {
+  const [createPost] = useMutation(GQL_CREATE_POST, {
     refetchQueries: [{ query: GQL_GET_ALL_POSTS }],
     variables: values,
   });
@@ -30,53 +29,49 @@ export default function NewPost(props) {
   }
   return (
     <ThemeProvider theme={theme}>
-      {{ loading } ? (
-        <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-          <Paper
-            variant="outlined"
-            sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
-          >
-            <Typography component="h1" variant="h4" align="center">
-              New Post
-            </Typography>
-            <Box component="form" onSubmit={onSubmit} sx={{ mt: 3 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    title="title"
-                    label="Title"
-                    name="title"
-                    autoFocus
-                    onChange={onChange}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="content"
-                    label="Content"
-                    title="content"
-                    onChange={onChange}
-                  />
-                </Grid>
+      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+        <Paper
+          variant="outlined"
+          sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
+        >
+          <Typography component="h1" variant="h4" align="center">
+            New Post
+          </Typography>
+          <Box component="form" onSubmit={onSubmit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  title="title"
+                  label="Title"
+                  name="title"
+                  autoFocus
+                  onChange={onChange}
+                />
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Post
-              </Button>
-            </Box>
-          </Paper>
-        </Container>
-      ) : (
-        <CircularProgress align="center" />
-      )}
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="content"
+                  label="Content"
+                  title="content"
+                  onChange={onChange}
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Post
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
     </ThemeProvider>
   );
 }
