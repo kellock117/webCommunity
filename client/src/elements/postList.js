@@ -49,8 +49,11 @@ export default function PostList() {
                     }}
                   >
                     <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography gutterBottom variant="h5" component="h2">
-                        {post.title} {post.time}
+                      <Typography gutterBottom variant="h3" component="h2">
+                        {post.title}
+                      </Typography>
+                      <Typography gutterBottom variant="h5" component="h3">
+                        {post.time}
                       </Typography>
                       <Typography>{post.content}</Typography>
                     </CardContent>
