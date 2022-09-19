@@ -4,7 +4,7 @@ const commentSchema = new Schema({
   content: String,
   userID: String,
   time: String,
-  likes: Number,
+  likes: [String],
 });
 
 module.exports = model("comment", commentSchema);

@@ -21,9 +21,11 @@ export default function Logout(props) {
         >
           SIMpleCOMMunity
         </Typography>
-        <Button variant="outlined" onClick={logout} size="small">
-          Logout
-        </Button>
+        {user && (
+          <Button variant="outlined" onClick={logout} size="small">
+            Logout
+          </Button>
+        )}
       </Toolbar>
     </React.Fragment>
   );

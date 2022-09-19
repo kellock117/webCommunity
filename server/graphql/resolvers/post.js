@@ -9,7 +9,7 @@ function postValidCheck(title, content) {
 
 module.exports = {
   Query: {
-    getPosts: async () => {
+    getAllPosts: async () => {
       const posts = await Post.find();
       return posts;
     },
@@ -17,27 +17,25 @@ module.exports = {
   Mutation: {
     createPost: async (_, { createPostInput: { title, content } }, context) => {
       // check validation
-      const { userID } = checkAuth(context);
-      postValidCheck(title, content);
+      const user = checkAuth(context);
 
+      postValidCheck(title, content);
       const post = new Post({
         title: title,
-        userID: userID,
+        userID: user.id,
         content: content,
         time: new Date().toISOString(),
-        likes: [],
-        comments: [],
       });
 
       const res = await post.save();
       return res;
     },
     deletePost: async (_, { postID }, context) => {
-      const { userID } = checkAuth(context);
+      const user = checkAuth(context);
 
       try {
         const post = await Post.findById(postID);
-        if (userID === post.userID) {
+        if (user.id === post.userID) {
           await post.delete();
           return "Post deleted successfully";
         } else {
@@ -48,15 +46,15 @@ module.exports = {
       }
     },
     likePost: async (_, { postID }, context) => {
-      const { userID } = checkAuth(context);
+      const user = checkAuth(context);
       const post = await Post.findById(postID);
 
       if (post) {
-        const checkLike = post.likes.find(like => like.userID == userID);
+        const checkLike = post.likes.find(like => like.userID == user.id);
         if (!checkLike) {
-          post.likes.push(userID);
+          post.likes.push(user.id);
         } else {
-          post.likes.filter(like => like.userID != userID);
+          post.likes.filter(like => like.userID != user.id);
         }
 
         await post.save();
