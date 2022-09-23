@@ -42,7 +42,7 @@ export default function Login(props) {
   function loginUserCallback() {
     loginUser();
   }
-  console.log("login");
+
   return (
     <ThemeProvider theme={theme}>
       {{ loading } ? (

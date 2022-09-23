@@ -27,7 +27,7 @@ export default function NewPost(props) {
   function createPostCallBack() {
     createPost();
   }
-  console.log("new post");
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
