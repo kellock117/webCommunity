@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
 import { AuthContext } from "../context/authContext.js";
 
-export default function Logout(props) {
+export default function Logout() {
   const { user, logout } = useContext(AuthContext);
 
   return (

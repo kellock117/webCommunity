@@ -20,9 +20,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 const theme = createTheme();
 
-export default function Login(props) {
+export default function Login() {
   const context = useContext(AuthContext);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState("");
 
   const { onChange, onSubmit, values } = useForm(loginUserCallback, {
     id: "",
@@ -42,7 +42,7 @@ export default function Login(props) {
   function loginUserCallback() {
     loginUser();
   }
-  console.log("login");
+
   return (
     <ThemeProvider theme={theme}>
       {{ loading } ? (
@@ -107,7 +107,8 @@ export default function Login(props) {
           </Box>
         </Container>
       ) : (
-        <CircularProgress align="center" />
+        <CircularProgress />
+        // align="center"
       )}
     </ThemeProvider>
   );

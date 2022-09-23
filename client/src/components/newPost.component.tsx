@@ -13,7 +13,7 @@ import Box from "@mui/material/Box";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme();
 
-export default function NewPost(props) {
+export default function NewPost() {
   const { onChange, onSubmit, values } = useForm(createPostCallBack, {
     title: "",
     content: "",
@@ -27,7 +27,7 @@ export default function NewPost(props) {
   function createPostCallBack() {
     createPost();
   }
-  console.log("new post");
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>

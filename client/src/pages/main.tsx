@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { AuthContext } from "../context/authContext.js";
-import Login from "../elements/login.js";
-import NavBar from "../elements/navbar.js";
-import NewPost from "../elements/newPost.js";
-import PostList from "../elements/postList.js";
+import { AuthContext } from "../context/authContext";
+import Login from "../components/login.component";
+import NavBar from "../components/navbar.component";
+import NewPost from "../components/newPost.component";
+import PostList from "../components/postList.component";
 
 export default function Main() {
   const { user } = useContext(AuthContext);
