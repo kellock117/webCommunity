@@ -71,40 +71,42 @@ export default function PostList() {
                 }) => {
                   const postDate = new Date(post.time);
 
-                  <Grid item key={post.id} xs={12} sm={6} md={4}>
-                    <Card
-                      sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <CardHeader
-                        title={post.title}
-                        subheader={`${postDate.getDay()} ${convertMonth(
-                          postDate.getMonth()
-                        )}, ${postDate.getFullYear()}`}
-                        titleTypographyProps={{
-                          variant: "h4",
-                          fontWeight: "bold",
+                  return (
+                    <Grid item key={post.id} xs={12} sm={6} md={4}>
+                      <Card
+                        sx={{
+                          height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
                         }}
-                      ></CardHeader>
-                      <CardContent>
-                        <Typography variant="h5">{post.content}</Typography>
-                      </CardContent>
-                      <CardActions disableSpacing>
-                        <IconButton aria-label="likes">
-                          <FavoriteIcon style={{ color: "red" }} />
-                        </IconButton>
-                        <IconButton
-                          style={{ color: "#50bcdf" }}
-                          aria-label="comments"
-                        >
-                          <CommentIcon />
-                        </IconButton>
-                      </CardActions>
-                    </Card>
-                  </Grid>;
+                      >
+                        <CardHeader
+                          title={post.title}
+                          subheader={`${postDate.getDay()} ${convertMonth(
+                            postDate.getMonth()
+                          )}, ${postDate.getFullYear()}`}
+                          titleTypographyProps={{
+                            variant: "h4",
+                            fontWeight: "bold",
+                          }}
+                        ></CardHeader>
+                        <CardContent>
+                          <Typography variant="h5">{post.content}</Typography>
+                        </CardContent>
+                        <CardActions disableSpacing>
+                          <IconButton aria-label="likes">
+                            <FavoriteIcon style={{ color: "red" }} />
+                          </IconButton>
+                          <IconButton
+                            style={{ color: "#50bcdf" }}
+                            aria-label="comments"
+                          >
+                            <CommentIcon />
+                          </IconButton>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  );
                 }
               )}
             </Grid>
