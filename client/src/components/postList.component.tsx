@@ -23,6 +23,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Alert from "@mui/material/Alert";
 
 const theme = createTheme();
 
@@ -30,11 +31,11 @@ export default function PostList() {
   const { data, loading, error } = useQuery(GQL_GET_ALL_POSTS);
 
   if (loading) {
-    return <CircularProgress align="center" />;
+    return <CircularProgress />;
   }
 
   if (error) {
-    return `Error: ${error.message}`;
+    return <Alert severity="error">{error.message}</Alert>;
   }
 
   if (data) {
@@ -51,10 +52,25 @@ export default function PostList() {
           ></Box>
           <Container sx={{ py: 8 }} maxWidth="md">
             <Grid container spacing={4}>
-              {posts.map(post => {
-                const postDate = new Date(post.time);
+              {posts.map(
+                (post: {
+                  time: string | number | Date;
+                  id: React.Key;
+                  title: any;
+                  content:
+                    | string
+                    | number
+                    | boolean
+                    | React.ReactElement<
+                        any,
+                        string | React.JSXElementConstructor<any>
+                      >
+                    | React.ReactFragment
+                    | React.ReactPortal;
+                  comments: any[];
+                }) => {
+                  const postDate = new Date(post.time);
 
-                return (
                   <Grid item key={post.id} xs={12} sm={6} md={4}>
                     <Card
                       sx={{
@@ -87,35 +103,10 @@ export default function PostList() {
                           <CommentIcon />
                         </IconButton>
                       </CardActions>
-                      {post.comments
-                        ? post.comments.map(comment => {
-                            const commentDate = new Date(comment.time);
-
-                            return (
-                              <CardContent sx={{ flexGrow: 1 }}>
-                                <Typography
-                                  gutterBottom
-                                  variant="h5"
-                                  component="h2"
-                                >
-                                  {comment.title}
-                                </Typography>
-                                <Typography>
-                                  {commentDate.getFullYear() +
-                                    "/" +
-                                    commentDate.getMonth() +
-                                    "/" +
-                                    commentDate.getDay()}
-                                </Typography>
-                                <Typography>{comment.content}</Typography>
-                              </CardContent>
-                            );
-                          })
-                        : ""}
                     </Card>
-                  </Grid>
-                );
-              })}
+                  </Grid>;
+                }
+              )}
             </Grid>
           </Container>
         </main>
@@ -124,7 +115,7 @@ export default function PostList() {
   }
 }
 
-function convertMonth(number) {
+function convertMonth(number: number) {
   if (number === 1) return "January";
   else if (number === 2) return "February";
   else if (number === 3) return "March";

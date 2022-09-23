@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 
 import { AuthContext } from "../context/authContext.js";
 
-export default function Logout(props) {
+export default function Logout() {
   const { user, logout } = useContext(AuthContext);
 
   return (

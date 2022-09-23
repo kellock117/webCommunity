@@ -21,10 +21,10 @@ import Alert from "@mui/material/Alert";
 
 const theme = createTheme();
 
-export default function Register(props) {
+export default function Register() {
   const context = useContext(AuthContext);
   const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState("");
 
   const { onChange, onSubmit, values } = useForm(createUserCallBack, {
     id: "",
@@ -128,7 +128,7 @@ export default function Register(props) {
           </Box>
         </Container>
       ) : (
-        <CircularProgress align="center" />
+        <CircularProgress />
       )}
     </ThemeProvider>
   );
