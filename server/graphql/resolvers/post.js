@@ -10,7 +10,7 @@ function postValidCheck(title, content) {
 module.exports = {
   Query: {
     getAllPosts: async () => {
-      const posts = await Post.find();
+      const posts = await Post.find().sort({ time: -1 });
       return posts;
     },
   },
@@ -50,15 +50,16 @@ module.exports = {
       const post = await Post.findById(postID);
 
       if (post) {
-        const checkLike = post.likes.find(like => like.userID == user.id);
-        if (!checkLike) {
+        const checkLike = post.likes.indexOf(user.id);
+
+        if (checkLike == -1) {
           post.likes.push(user.id);
         } else {
-          post.likes.filter(like => like.userID != user.id);
+          post.likes.splice(checkLike, 1);
         }
 
         await post.save();
-        return post;
+        return post.likes;
       } else {
         throw new UserInputError("Post not found");
       }
