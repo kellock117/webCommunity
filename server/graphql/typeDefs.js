@@ -22,7 +22,7 @@ module.exports = gql`
   }
   type Query {
     getAllPosts: [Post]
-    getComments: [Comment]
+    getComments(postID: String!): [Comment]
   }
   input RegisterInput {
     id: String!
@@ -37,13 +37,17 @@ module.exports = gql`
     title: String!
     content: String!
   }
+  input CreateCommentInput {
+    postID: String!
+    content: String!
+  }
   type Mutation {
     createUser(registerInput: RegisterInput): User!
     login(loginInput: LoginInput): User!
     createPost(createPostInput: CreatePostInput): Post!
     deletePost(postID: ID!): String!
     likePost(postID: ID!): Post!
-    createComment(content: String!): Comment!
+    createComment(createCommentInput: CreateCommentInput): Comment!
     deleteComment(commentID: ID!): String!
     likeComment(commentID: ID!): Post!
   }

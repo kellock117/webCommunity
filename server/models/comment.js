@@ -1,10 +1,11 @@
 const { model, Schema } = require("mongoose");
 
-const commentSchema = new Schema({
+const CommentSchema = new Schema({
+  postID: String,
   content: String,
   userID: String,
   time: String,
-  likes: [String],
+  likes: { type: [String], default: null },
 });
 
-module.exports = model("comment", commentSchema);
+module.exports = model("comment", CommentSchema);

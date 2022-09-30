@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../context/authContext";
+import React, { useState } from "react";
 import Like from "./like.component";
+import Comment from "./comment.component";
 
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -11,21 +11,25 @@ import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
 
-interface props {
+interface PostProps {
+  userID: string;
   id: React.Key;
   title: string;
   time: string;
   content: string;
   likes: string[];
-  comments: string[];
 }
 
-export default function Post(props: props) {
-  const { user } = useContext(AuthContext);
-  const postDate = new Date(props.time);
+export default function Post(post: PostProps) {
+  const postDate = new Date(post.time);
+
+  const [expanded, setExpanded] = useState(false);
+  const onClick = () => {
+    setExpanded(!expanded);
+  };
 
   return (
-    <Grid item key={props.id} xs={10} justifyContent="center">
+    <Grid item key={post.id} xs={10} justifyContent="center">
       <Card
         sx={{
           height: "100%",
@@ -34,7 +38,7 @@ export default function Post(props: props) {
         }}
       >
         <CardHeader
-          title={props.title}
+          title={post.title}
           subheader={getTimeInformation(postDate)}
           titleTypographyProps={{
             variant: "h5",
@@ -42,19 +46,24 @@ export default function Post(props: props) {
           }}
         ></CardHeader>
         <CardContent>
-          <Typography variant="h5">{props.content}</Typography>
+          <Typography variant="h5">{post.content}</Typography>
         </CardContent>
         <CardActions disableSpacing>
           <Like
-            key={props.id}
-            id={props.id}
-            user={user.id}
-            likes={props.likes}
+            key={post.id}
+            id={post.id}
+            userID={post.userID}
+            likes={post.likes}
           />
-          <IconButton style={{ color: "#50bcdf" }} aria-label="comments">
+          <IconButton
+            onClick={onClick}
+            style={{ color: "#50bcdf" }}
+            aria-label="comments"
+          >
             <CommentIcon />
           </IconButton>
         </CardActions>
+        <Comment key={post.id} postID={post.id} expanded={expanded} />
       </Card>
     </Grid>
   );

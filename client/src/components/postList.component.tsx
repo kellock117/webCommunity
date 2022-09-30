@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/authContext";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Post from "./post.component";
+import jwt_decode from "jwt-decode";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,8 +14,19 @@ import Alert from "@mui/material/Alert";
 
 const theme = createTheme();
 
+interface PostProps {
+  userID: string;
+  id: React.Key;
+  title: string;
+  time: string;
+  content: string;
+  likes: string[];
+}
+
 export default function PostList() {
   const { data, loading, error } = useQuery(GQL_GET_ALL_POSTS);
+  let { user } = useContext(AuthContext);
+  if (user.id.length > 20) user = jwt_decode(user.token);
 
   if (loading) {
     return <CircularProgress />;
@@ -25,6 +38,7 @@ export default function PostList() {
 
   if (data) {
     const { getAllPosts: posts } = data;
+
     return (
       <ThemeProvider theme={theme}>
         <main>
@@ -37,28 +51,19 @@ export default function PostList() {
           ></Box>
           <Container maxWidth="md">
             <Grid container spacing={8} justifyContent="center">
-              {posts.map(
-                (post: {
-                  id: React.Key;
-                  title: string;
-                  time: string;
-                  content: string;
-                  likes: string[];
-                  comments: string[];
-                }) => {
-                  return (
-                    <Post
-                      key={post.id}
-                      id={post.id}
-                      title={post.title}
-                      time={post.time}
-                      content={post.content}
-                      likes={post.likes}
-                      comments={post.comments}
-                    />
-                  );
-                }
-              )}
+              {posts.map((post: PostProps) => {
+                return (
+                  <Post
+                    key={post.id}
+                    userID={user.id}
+                    id={post.id}
+                    title={post.title}
+                    time={post.time}
+                    content={post.content}
+                    likes={post.likes}
+                  />
+                );
+              })}
             </Grid>
           </Container>
         </main>

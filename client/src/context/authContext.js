@@ -1,4 +1,4 @@
-import jwtDecode from "jwt-decode";
+import jwt_decode from "jwt-decode";
 import React, { useReducer, createContext } from "react";
 
 const initialState = {
@@ -6,10 +6,9 @@ const initialState = {
 };
 
 if (localStorage.getItem(process.env.REACT_APP_KEY)) {
-  const decodedToken = jwtDecode(
+  const decodedToken = jwt_decode(
     localStorage.getItem(process.env.REACT_APP_KEY)
   );
-
   if (decodedToken.exp * 1000 < Date.now()) {
     localStorage.removeItem(process.env.REACT_APP_KEY);
   } else {

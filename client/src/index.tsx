@@ -14,9 +14,7 @@ root.render(
   <AuthProvider>
     <ApolloProvider client={client}>
       <BrowserRouter>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
+        <App />
       </BrowserRouter>
     </ApolloProvider>
   </AuthProvider>
