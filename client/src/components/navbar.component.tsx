@@ -11,15 +11,11 @@ export default function Logout() {
   return (
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Typography
-          component="h2"
-          variant="h5"
-          color="inherit"
-          align="center"
-          noWrap
-          sx={{ flex: 1 }}
-        >
-          SIMpleCOMMunity
+        <Typography color="green" variant="h5">
+          SIM
+        </Typography>
+        <Typography variant="h5" sx={{ flex: 1 }}>
+          pleCommunity
         </Typography>
         {user && (
           <Button variant="outlined" onClick={logout} size="small">

@@ -4,27 +4,37 @@ const { UserInputError } = require("apollo-server");
 
 module.exports = {
   Query: {
-    getComments: async () => {
-      const comments = await Comment.find();
+    getComments: async (_, { postID }) => {
+      const comments = await Comment.find({ postID: postID });
+
       return comments;
     },
   },
   Mutation: {
-    createComment: async (_, { content }, context) => {
-      const { userID } = checkAuth(context);
+    createComment: async (
+      _,
+      { createCommentInput: { postID, content } },
+      context
+    ) => {
+      const { id } = checkAuth(context);
       if (content.trim() == "") throw new UserInputError("invalid content");
 
-      const comment = new Comment(userID, content, new Date().toISOString());
+      const comment = new Comment({
+        postID: postID,
+        content: content,
+        userID: id,
+        time: new Date().toISOString(),
+      });
 
-      const res = comment.save();
+      const res = await comment.save();
       return res;
     },
     deleteComment: async (_, { commentID }, context) => {
-      const { userID } = checkAuth(context);
+      const { id } = checkAuth(context);
 
       try {
         const comment = await Comment.findById(commentID);
-        if (userID === comment.userID) {
+        if (id === comment.id) {
           await comment.delete();
           return "Comment deleted successfully";
         } else {
@@ -35,15 +45,15 @@ module.exports = {
       }
     },
     likeComment: async (_, { commentID }, context) => {
-      const { userID } = checkAuth(context);
+      const { id } = checkAuth(context);
       const comment = await Comment.findById(commentID);
 
       if (comment) {
-        const checkLike = comment.likes.find(like => like.userID == userID);
+        const checkLike = comment.likes.find(like => like.id == id);
         if (!checkLike) {
-          comment.likes.push(userID);
+          comment.likes.push(id);
         } else {
-          comment.likes.filter(like => like.userID != userID);
+          comment.likes.filter(like => like.id != id);
         }
 
         await comment.save();

@@ -30,11 +30,8 @@ export default function NewPost() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-        <Paper
-          variant="outlined"
-          sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
-        >
+      <Container maxWidth="sm">
+        <Paper variant="outlined" sx={{ my: 5, p: 5 }}>
           <Typography component="h1" variant="h4" align="center">
             New Post
           </Typography>
@@ -58,6 +55,8 @@ export default function NewPost() {
                   name="content"
                   label="Content"
                   title="content"
+                  multiline
+                  rows={6}
                   onChange={onChange}
                 />
               </Grid>
