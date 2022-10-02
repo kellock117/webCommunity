@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { useForm } from "../util/hooks";
 import gql from "graphql-tag";

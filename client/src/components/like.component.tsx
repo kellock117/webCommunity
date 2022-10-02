@@ -7,12 +7,12 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 
 interface props {
   id: React.Key;
-  userID: string;
+  currentUser: string;
   likes: string[];
 }
 
 export default function Like(props: props) {
-  const isUserLiked = props.likes.includes(props.userID);
+  const isUserLiked = props.likes.includes(props.currentUser);
   let likeCount = isUserLiked ? props.likes.length - 1 : props.likes.length;
   const [pressed, setPressed] = useState(isUserLiked);
 

@@ -7,8 +7,8 @@ backend: node.js(framework), apollo-server(graphql), mongoose(mongodb)
 
 # Funtions implemented
 
-login with jwt, create post, view post, like post, post caching
+login with jwt, create post, view post, like post, post caching, create comment, delete post
 
 # Functions to be implemented
 
-delete post, view my post, view notification of comment and likes, create comment, like comment, delete comment
+view my post, view notification of comment and likes, like comment, delete comment
