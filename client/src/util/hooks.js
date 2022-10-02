@@ -8,7 +8,7 @@ export const useForm = (callback, initialState = {}) => {
   };
 
   const onSubmit = event => {
-    if (event.target.className == "MuiBox-root css-164r41r")
+    if (event.target.className === "MuiBox-root css-164r41r")
       event.preventDefault();
     callback();
   };

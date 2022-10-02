@@ -14,6 +14,7 @@ import Alert from "@mui/material/Alert";
 const theme = createTheme();
 
 interface PostProps {
+  currentUser: string;
   userID: string;
   id: React.Key;
   title: string;
@@ -53,7 +54,8 @@ export default function PostList() {
                 return (
                   <Post
                     key={post.id}
-                    userID={user.id}
+                    currentUser={user.id}
+                    userID={post.userID}
                     id={post.id}
                     title={post.title}
                     time={post.time}

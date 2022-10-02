@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Like from "./like.component";
 import Comment from "./comment.component";
+import DeletePost from "./deletePost.component";
 
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -10,9 +11,9 @@ import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
-import DeleteIcon from "@mui/icons-material/DeleteForever";
 
 interface PostProps {
+  currentUser: string;
   userID: string;
   id: React.Key;
   title: string;
@@ -62,9 +63,11 @@ export default function Post(post: PostProps) {
             fontWeight: "bold",
           }}
           action={
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
+            <DeletePost
+              currentUser={post.currentUser}
+              userID={post.userID}
+              postID={post.id}
+            />
           }
         ></CardHeader>
         <CardContent>
@@ -74,7 +77,7 @@ export default function Post(post: PostProps) {
           <Like
             key={post.id}
             id={post.id}
-            userID={post.userID}
+            currentUser={post.currentUser}
             likes={post.likes}
           />
           <IconButton
