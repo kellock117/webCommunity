@@ -1,5 +1,10 @@
 [[redirects]]
   from = "/*"
-  to = "https://simple-web-community.herokuapp.com/:splat"
+  to = "/index.html"
+  status = 200
+  
+[[redirects]]
+  from = "/login"
+  to = "https://simple-web-community.herokuapp.com/login"
   status = 200
   force = true
