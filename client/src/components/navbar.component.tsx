@@ -7,7 +7,6 @@ import { AuthContext } from "../context/authContext.js";
 
 export default function Logout() {
   const { user, logout } = useContext(AuthContext);
-  console.log(user, user.id);
 
   return (
     <React.Fragment>

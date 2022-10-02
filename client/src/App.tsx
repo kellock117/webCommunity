@@ -9,15 +9,13 @@ import Register from "./pages/register";
 
 function App() {
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<AuthRoute />}>
-          <Route path="/" element={<Main />} />
-        </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<AuthRoute />}>
+        <Route path="/" element={<Main />} />
+      </Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
   );
 }
 
