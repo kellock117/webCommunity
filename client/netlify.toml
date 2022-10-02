@@ -1,5 +1,0 @@
-[[redirects]]
-  from = "/proxy/*"
-  to = "https://simple-web-community.herokuapp.com/:splat"
-  status = 200
-  force = true
