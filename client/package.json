@@ -52,6 +52,5 @@
   "proxy": "https://simple-web-community.herokuapp.com/",
   "devDependencies": {
     "typescript": "^4.8.3"
-  },
-  "homepage": "https://simcomm.netlify.app/"
+  }
 }
