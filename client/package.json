@@ -52,5 +52,6 @@
   "proxy": "http://localhost:5000/",
   "devDependencies": {
     "typescript": "^4.8.3"
-  }
+  },
+  "homepage": "https://simcomm.netlify.app/"
 }
