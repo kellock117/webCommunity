@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
+import DeleteIcon from "@mui/icons-material/DeleteForever";
 
 interface PostProps {
   userID: string;
@@ -23,13 +24,15 @@ interface PostProps {
 export default function Post(post: PostProps) {
   const postDate = new Date(post.time);
 
+  const [commentLength, setCommentLength] = useState(0);
+
   const [expanded, setExpanded] = useState(false);
   const onClick = () => {
     setExpanded(!expanded);
   };
 
   return (
-    <Grid item key={post.id} xs={10} justifyContent="center">
+    <Grid item key={post.id} xs={8} justifyContent="center">
       <Card
         sx={{
           height: "100%",
@@ -39,11 +42,30 @@ export default function Post(post: PostProps) {
       >
         <CardHeader
           title={post.title}
-          subheader={getTimeInformation(postDate)}
+          subheader={
+            <>
+              <Typography
+                display="inline"
+                sx={{
+                  mr: 1,
+                }}
+              >
+                {post.userID}
+              </Typography>
+              <Typography display="inline">
+                {getTimeInformation(postDate)}
+              </Typography>
+            </>
+          }
           titleTypographyProps={{
             variant: "h5",
             fontWeight: "bold",
           }}
+          action={
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          }
         ></CardHeader>
         <CardContent>
           <Typography variant="h5">{post.content}</Typography>
@@ -60,10 +82,16 @@ export default function Post(post: PostProps) {
             style={{ color: "#50bcdf" }}
             aria-label="comments"
           >
-            <CommentIcon />
+            <CommentIcon sx={{ mr: 0.5 }} />
+            {commentLength}
           </IconButton>
         </CardActions>
-        <Comment key={post.id} postID={post.id} expanded={expanded} />
+        <Comment
+          key={post.id}
+          postID={post.id}
+          expanded={expanded}
+          setCommentLength={setCommentLength}
+        />
       </Card>
     </Grid>
   );

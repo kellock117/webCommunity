@@ -26,13 +26,13 @@ export default function Like(props: props) {
   };
 
   return pressed ? (
-    <IconButton onClick={handleSubmission}>
-      <FavoriteIcon style={{ color: "red" }} />
+    <IconButton onClick={handleSubmission} style={{ color: "red" }}>
+      <FavoriteIcon sx={{ mr: 0.5 }} />
       {likeCount + 1}
     </IconButton>
   ) : (
     <IconButton onClick={handleSubmission}>
-      <FavoriteIcon />
+      <FavoriteIcon sx={{ mr: 0.5 }} />
       {likeCount}
     </IconButton>
   );

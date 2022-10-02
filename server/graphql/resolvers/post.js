@@ -2,11 +2,6 @@ const Post = require("../../models/post.js");
 const checkAuth = require("../../util/authentication.js");
 const { UserInputError } = require("apollo-server");
 
-function postValidCheck(title, content) {
-  if (title.trim() == "") throw new UserInputError("invalid title");
-  if (content.trim() == "") throw new UserInputError("invalid content");
-}
-
 module.exports = {
   Query: {
     getAllPosts: async () => {
@@ -19,7 +14,6 @@ module.exports = {
       // check validation
       const user = checkAuth(context);
 
-      postValidCheck(title, content);
       const post = new Post({
         title: title,
         userID: user.id,

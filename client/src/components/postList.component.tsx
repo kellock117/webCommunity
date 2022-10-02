@@ -3,7 +3,6 @@ import { AuthContext } from "../context/authContext";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Post from "./post.component";
-import jwt_decode from "jwt-decode";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -26,7 +25,6 @@ interface PostProps {
 export default function PostList() {
   const { data, loading, error } = useQuery(GQL_GET_ALL_POSTS);
   let { user } = useContext(AuthContext);
-  if (user.id.length > 20) user = jwt_decode(user.token);
 
   if (loading) {
     return <CircularProgress />;
@@ -81,12 +79,6 @@ const GQL_GET_ALL_POSTS = gql`
       content
       time
       likes
-      comments {
-        userID
-        content
-        time
-        likes
-      }
     }
   }
 `;

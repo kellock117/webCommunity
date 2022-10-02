@@ -17,10 +17,16 @@ export default function Logout() {
         <Typography variant="h5" sx={{ flex: 1 }}>
           pleCommunity
         </Typography>
+
         {user && (
-          <Button variant="outlined" onClick={logout} size="small">
-            Logout
-          </Button>
+          <>
+            <Typography variant="h6" sx={{ mr: 2 }}>
+              {user.id}
+            </Typography>
+            <Button variant="outlined" onClick={logout} size="small">
+              Logout
+            </Button>
+          </>
         )}
       </Toolbar>
     </React.Fragment>
