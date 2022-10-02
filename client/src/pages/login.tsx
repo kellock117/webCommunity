@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "../util/hooks";
 import { AuthContext } from "../context/authContext";
 import { useMutation } from "@apollo/react-hooks";
@@ -24,7 +23,6 @@ const theme = createTheme();
 export default function Login() {
   const context = useContext(AuthContext);
   const [errors, setErrors] = useState("");
-  const navigate = useNavigate();
 
   const { onChange, onSubmit, values } = useForm(loginUserCallback, {
     id: "",
@@ -34,7 +32,7 @@ export default function Login() {
   const [loginUser, { loading }] = useMutation(GQL_LOGIN, {
     update(_, { data: { login: userData } }) {
       context.login(userData);
-      navigate("/");
+      window.location.replace("/");
     },
     onError(error) {
       setErrors(error.message);

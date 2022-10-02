@@ -25,7 +25,7 @@ interface PostProps {
 
 export default function PostList() {
   const { data, loading, error } = useQuery(GQL_GET_ALL_POSTS);
-  let { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   if (loading) {
     return <CircularProgress />;
