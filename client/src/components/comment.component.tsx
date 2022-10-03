@@ -42,7 +42,9 @@ export default function Comment(props: Props) {
   });
 
   const [createComment] = useMutation(GQL_CREATE_COMMENT, {
-    refetchQueries: [{ query: GQL_GET_COMMENTS }],
+    refetchQueries: [
+      { query: GQL_GET_COMMENTS, variables: { postID: props.postID } },
+    ],
     variables: values,
   });
 
@@ -81,16 +83,14 @@ export default function Comment(props: Props) {
                       secondary={
                         <>
                           <Typography
-                            component="span"
                             variant="body2"
-                            sx={{ display: "inline" }}
+                            component="span"
                             color="textPrimary"
                           >
                             {comment.content}
                           </Typography>
-                          <Typography fontSize={14}>
-                            {showTime(currentTime, new Date(comment.time))}
-                          </Typography>
+                          <br />
+                          {showTime(currentTime, new Date(comment.time))}
                         </>
                       }
                     />
