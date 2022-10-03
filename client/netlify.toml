@@ -8,3 +8,9 @@
   to = "https://simple-web-community.herokuapp.com/login"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/register"
+  to = "https://simple-web-community.herokuapp.com/register"
+  status = 200
+  force = true
