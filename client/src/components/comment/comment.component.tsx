@@ -1,6 +1,8 @@
 import React, { Fragment, useEffect } from "react";
+import LikeComment from "./likeComment.component";
+import DeleteComment from "./deleteComment.component";
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import { useForm } from "../util/hooks";
+import { useForm } from "../../util/hooks";
 import gql from "graphql-tag";
 
 import Typography from "@mui/material/Typography";
@@ -24,6 +26,7 @@ interface CommentProps {
 }
 
 interface Props {
+  currentUser: string;
   postID: React.Key;
   expanded: boolean;
   setCommentLength: any;
@@ -61,7 +64,7 @@ export default function Comment(props: Props) {
   });
 
   if (!getComments) {
-    return <CircularProgress />;
+    return <CircularProgress style={{ marginLeft: "50%" }} />;
   } else {
     const comments = getComments;
 
@@ -76,9 +79,20 @@ export default function Comment(props: Props) {
                   <ListItem key={comment.id} alignItems="flex-start">
                     <ListItemText
                       primary={
-                        <Typography sx={{ fontWeight: "bold" }}>
-                          {comment.userID}
-                        </Typography>
+                        <>
+                          <Typography
+                            sx={{ fontWeight: "bold" }}
+                            component="span"
+                          >
+                            {comment.userID}
+                          </Typography>
+                          <DeleteComment
+                            postID={props.postID}
+                            commentID={comment.id}
+                            currentUser={props.currentUser}
+                            userID={comment.userID}
+                          />
+                        </>
                       }
                       secondary={
                         <>
@@ -91,6 +105,11 @@ export default function Comment(props: Props) {
                           </Typography>
                           <br />
                           {showTime(currentTime, new Date(comment.time))}
+                          <LikeComment
+                            id={comment.id}
+                            currentUser={props.currentUser}
+                            likes={comment.likes}
+                          />
                         </>
                       }
                     />

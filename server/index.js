@@ -10,7 +10,6 @@ const PORT = process.env.PORT || 5000;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  csrfPrevention: true,
   context: ({ req }) => ({ req }),
 });
 

@@ -30,11 +30,10 @@ module.exports = {
       return res;
     },
     deleteComment: async (_, { commentID }, context) => {
-      const { id } = checkAuth(context);
-
+      const user = checkAuth(context);
       try {
         const comment = await Comment.findById(commentID);
-        if (id === comment.id) {
+        if (user.id === comment.userID) {
           await comment.delete();
           return "Comment deleted successfully";
         } else {
@@ -45,21 +44,22 @@ module.exports = {
       }
     },
     likeComment: async (_, { commentID }, context) => {
-      const { id } = checkAuth(context);
+      const user = checkAuth(context);
       const comment = await Comment.findById(commentID);
 
       if (comment) {
-        const checkLike = comment.likes.find(like => like.id == id);
-        if (!checkLike) {
-          comment.likes.push(id);
+        const checkLike = comment.likes.indexOf(user.id);
+
+        if (checkLike == -1) {
+          comment.likes.push(user.id);
         } else {
-          comment.likes.filter(like => like.id != id);
+          comment.likes.splice(checkLike, 1);
         }
 
         await comment.save();
         return comment;
       } else {
-        throw new UserInputError("Post not found");
+        throw new UserInputError("Comment not found");
       }
     },
   },

@@ -40,6 +40,7 @@ module.exports = {
       }
     },
     likePost: async (_, { postID }, context) => {
+      console.log(user);
       const user = checkAuth(context);
       const post = await Post.findById(postID);
 

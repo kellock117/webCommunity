@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../../context/authContext";
 
 export default function Logout() {
   const { user, logout } = useContext(AuthContext);
