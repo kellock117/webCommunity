@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../../context/authContext";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Post from "./post.component";
@@ -28,7 +28,7 @@ export default function PostList() {
   const { user } = useContext(AuthContext);
 
   if (loading) {
-    return <CircularProgress />;
+    return <CircularProgress style={{ marginLeft: "50%" }} />;
   }
 
   if (error) {

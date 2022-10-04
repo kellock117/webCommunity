@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Like from "./like.component";
-import Comment from "./comment.component";
+import Like from "./likePost.component";
+import Comment from "../comment/comment.component";
 import DeletePost from "./deletePost.component";
 
 import Grid from "@mui/material/Grid";
@@ -92,6 +92,7 @@ export default function Post(post: PostProps) {
         <Comment
           key={post.id}
           postID={post.id}
+          currentUser={post.currentUser}
           expanded={expanded}
           setCommentLength={setCommentLength}
         />

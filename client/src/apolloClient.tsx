@@ -1,8 +1,10 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
+console.log(process.env.REACT_APP_URI);
+
 const httpLink = createHttpLink({
-  uri: "https://simple-web-community.herokuapp.com/",
+  uri: process.env.REACT_APP_URI,
 });
 
 const authLink = setContext(() => {
