@@ -15,7 +15,7 @@ const theme = createTheme();
 
 interface PostProps {
   currentUser: string;
-  userID: string;
+  userName: string;
   id: React.Key;
   title: string;
   time: string;
@@ -54,8 +54,8 @@ export default function PostList() {
                 return (
                   <Post
                     key={post.id}
-                    currentUser={user.id}
-                    userID={post.userID}
+                    currentUser={user.userName}
+                    userName={post.userName}
                     id={post.id}
                     title={post.title}
                     time={post.time}
@@ -77,7 +77,7 @@ const GQL_GET_ALL_POSTS = gql`
     getAllPosts {
       id
       title
-      userID
+      userName
       content
       time
       likes

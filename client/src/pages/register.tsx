@@ -28,6 +28,7 @@ export default function Register() {
     id: "",
     password: "",
     confirmPassword: "",
+    userName: "",
   });
 
   const [createUser, { loading }] = useMutation(GQL_REGISTER, {
@@ -44,6 +45,7 @@ export default function Register() {
 
   function createUserCallBack() {
     createUser();
+    console.log(values);
   }
 
   return (
@@ -75,6 +77,16 @@ export default function Register() {
                     label="ID"
                     name="id"
                     autoFocus
+                    onChange={onChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="userName"
+                    label="User Name"
+                    name="userName"
                     onChange={onChange}
                   />
                 </Grid>
@@ -137,12 +149,14 @@ const GQL_REGISTER = gql`
     $id: String!
     $password: String!
     $confirmPassword: String!
+    $userName: String!
   ) {
     createUser(
       registerInput: {
         id: $id
         password: $password
         confirmPassword: $confirmPassword
+        userName: $userName
       }
     ) {
       id

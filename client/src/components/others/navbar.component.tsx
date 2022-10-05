@@ -21,7 +21,7 @@ export default function Logout() {
         {user && (
           <>
             <Typography variant="h6" sx={{ mr: 2 }}>
-              {user.id}
+              {user.userName}
             </Typography>
             <Button variant="outlined" onClick={logout} size="small">
               Logout

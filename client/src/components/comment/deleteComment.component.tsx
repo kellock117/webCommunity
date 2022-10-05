@@ -9,7 +9,7 @@ interface Props {
   postID: React.Key;
   commentID: React.Key;
   currentUser: string;
-  userID: string;
+  userName: string;
 }
 
 export default function DeletePost(props: Props) {
@@ -25,7 +25,7 @@ export default function DeletePost(props: Props) {
       deleteComment();
   };
 
-  if (props.currentUser === props.userID) {
+  if (props.currentUser === props.userName) {
     return (
       <IconButton
         onClick={handleSubmission}
@@ -49,7 +49,7 @@ const GQL_GET_COMMENTS = gql`
   query GetComments($postID: String!) {
     getComments(postID: $postID) {
       id
-      userID
+      userName
       content
       time
       likes

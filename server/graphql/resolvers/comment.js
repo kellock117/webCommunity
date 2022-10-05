@@ -16,13 +16,12 @@ module.exports = {
       { createCommentInput: { postID, content } },
       context
     ) => {
-      const { id } = checkAuth(context);
-      if (content.trim() == "") throw new UserInputError("invalid content");
+      const user = checkAuth(context);
 
       const comment = new Comment({
         postID: postID,
         content: content,
-        userID: id,
+        userName: user.userName,
         time: new Date().toISOString(),
       });
 
@@ -33,7 +32,7 @@ module.exports = {
       const user = checkAuth(context);
       try {
         const comment = await Comment.findById(commentID);
-        if (user.id === comment.userID) {
+        if (user.userName === comment.userName) {
           await comment.delete();
           return "Comment deleted successfully";
         } else {
@@ -48,10 +47,10 @@ module.exports = {
       const comment = await Comment.findById(commentID);
 
       if (comment) {
-        const checkLike = comment.likes.indexOf(user.id);
+        const checkLike = comment.likes.indexOf(user.userName);
 
         if (checkLike == -1) {
-          comment.likes.push(user.id);
+          comment.likes.push(user.userName);
         } else {
           comment.likes.splice(checkLike, 1);
         }

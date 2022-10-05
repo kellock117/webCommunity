@@ -6,7 +6,7 @@ const { UserInputError } = require("apollo-server");
 function generateToken(user) {
   return jwt.sign(
     {
-      id: user.id,
+      userName: user.userName,
       password: user.password,
     },
     process.env.SECRET_KEY,
@@ -18,12 +18,18 @@ module.exports = {
   Mutation: {
     createUser: async (
       _,
-      { registerInput: { id, password, confirmPassword } }
+      { registerInput: { id, password, confirmPassword, userName } }
     ) => {
       // check if the user already exists
       const oldUser = await User.findOne({ id: id });
       if (oldUser) {
         throw new UserInputError("id already exists");
+      }
+
+      const oldUserName = await User.findOne({ userName: userName });
+
+      if (oldUserName) {
+        throw new UserInputError("user name already exists");
       }
 
       if (password != confirmPassword) {
@@ -36,6 +42,7 @@ module.exports = {
       const user = new User({
         id: id,
         password: password,
+        userName: userName,
       });
 
       // save the user information into mongodb

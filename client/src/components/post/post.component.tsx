@@ -15,7 +15,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 
 interface PostProps {
   currentUser: string;
-  userID: string;
+  userName: string;
   id: React.Key;
   title: string;
   time: string;
@@ -54,7 +54,7 @@ export default function Post(post: PostProps) {
                   mr: 1,
                 }}
               >
-                {post.userID}
+                {post.userName}
               </Typography>
               <Typography display="inline">
                 {getTimeInformation(postDate)}
@@ -68,7 +68,7 @@ export default function Post(post: PostProps) {
           action={
             <DeletePost
               currentUser={post.currentUser}
-              userID={post.userID}
+              userName={post.userName}
               postID={post.id}
             />
           }

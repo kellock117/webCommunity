@@ -21,7 +21,7 @@ import Divider from "@mui/material/Divider";
 interface CommentProps {
   id: React.Key;
   content: string;
-  userID: string;
+  userName: string;
   time: string;
   likes: string[];
 }
@@ -85,13 +85,13 @@ export default function Comment(props: Props) {
                             sx={{ fontWeight: "bold" }}
                             component="span"
                           >
-                            {comment.userID}
+                            {comment.userName}
                           </Typography>
                           <DeleteComment
                             postID={props.postID}
                             commentID={comment.id}
                             currentUser={props.currentUser}
-                            userID={comment.userID}
+                            userName={comment.userName}
                           />
                         </>
                       }
@@ -172,7 +172,7 @@ const GQL_GET_COMMENTS = gql`
   query GetComments($postID: String!) {
     getComments(postID: $postID) {
       id
-      userID
+      userName
       content
       time
       likes
@@ -184,7 +184,7 @@ const GQL_CREATE_COMMENT = gql`
   mutation createCommentCallback($postID: String!, $content: String!) {
     createComment(createCommentInput: { postID: $postID, content: $content }) {
       id
-      userID
+      userName
       content
       time
       likes

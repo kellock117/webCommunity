@@ -81,12 +81,12 @@ const GQL_CREATE_POST = gql`
     createPost(createPostInput: { title: $title, content: $content }) {
       id
       title
-      userID
+      userName
       content
       time
       likes
       comments {
-        userID
+        userName
         content
         time
         likes
@@ -100,12 +100,12 @@ const GQL_GET_ALL_POSTS = gql`
     getAllPosts {
       id
       title
-      userID
+      userName
       content
       time
       likes
       comments {
-        userID
+        userName
         content
         time
         likes
