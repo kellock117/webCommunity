@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect } from "react";
+import { isMobile } from "react-device-detect";
 import LikeComment from "./likeComment.component";
 import DeleteComment from "./deleteComment.component";
 import { useQuery, useMutation } from "@apollo/react-hooks";
@@ -56,7 +57,7 @@ export default function Comment(props: Props) {
   }
 
   const currentTime = new Date();
-
+  const commentBoxSize = isMobile ? "20ch" : "49ch";
   useEffect(() => {
     if (getComments) {
       props.setCommentLength(getComments.length);
@@ -129,7 +130,7 @@ export default function Comment(props: Props) {
               name="content"
               autoFocus
               onChange={onChange}
-              sx={{ m: 2, width: "49ch" }}
+              sx={{ m: 2, width: commentBoxSize }}
             />
             <Button
               type="submit"
