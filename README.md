@@ -23,4 +23,5 @@ login with jwt, create post, view post, like post, post caching, create comment,
 
 # Functions to be implemented
 
-view my post, view notification of comment and likes, 
+react-mobile-detect
+

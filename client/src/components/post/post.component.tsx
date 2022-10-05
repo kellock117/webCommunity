@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { isMobile } from "react-device-detect";
 import Like from "./likePost.component";
 import Comment from "../comment/comment.component";
 import DeletePost from "./deletePost.component";
@@ -32,8 +33,10 @@ export default function Post(post: PostProps) {
     setExpanded(!expanded);
   };
 
+  const gridSize = isMobile ? 10 : 8;
+
   return (
-    <Grid item key={post.id} xs={8} justifyContent="center">
+    <Grid item key={post.id} xs={gridSize} justifyContent="center">
       <Card
         sx={{
           height: "100%",
