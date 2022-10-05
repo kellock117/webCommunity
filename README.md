@@ -24,3 +24,4 @@ login with jwt, create post, view post, like post, post caching, create comment,
 # Functions to be implemented
 
 react-mobile-detect
+
