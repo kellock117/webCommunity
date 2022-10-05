@@ -16,7 +16,7 @@ module.exports = {
 
       const post = new Post({
         title: title,
-        userID: user.id,
+        userName: user.userName,
         content: content,
         time: new Date().toISOString(),
       });
@@ -29,7 +29,7 @@ module.exports = {
 
       try {
         const post = await Post.findById(postID);
-        if (user.id === post.userID) {
+        if (user.userName === post.userName) {
           await post.delete();
           return "Post deleted successfully";
         } else {
@@ -44,10 +44,10 @@ module.exports = {
       const post = await Post.findById(postID);
 
       if (post) {
-        const checkLike = post.likes.indexOf(user.id);
+        const checkLike = post.likes.indexOf(user.userName);
 
         if (checkLike == -1) {
-          post.likes.push(user.id);
+          post.likes.push(user.userName);
         } else {
           post.likes.splice(checkLike, 1);
         }

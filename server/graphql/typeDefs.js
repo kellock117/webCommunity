@@ -8,7 +8,7 @@ module.exports = gql`
   type Post {
     id: ID!
     title: String!
-    userID: String!
+    userName: String!
     content: String!
     time: String!
     likes: [String]
@@ -16,7 +16,7 @@ module.exports = gql`
   }
   type Comment {
     id: ID!
-    userID: String!
+    userName: String!
     content: String!
     time: String!
     likes: [String]
@@ -29,6 +29,7 @@ module.exports = gql`
     id: String!
     password: String!
     confirmPassword: String!
+    userName: String!
   }
   input LoginInput {
     id: String!

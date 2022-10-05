@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/DeleteForever";
 interface Props {
   postID: React.Key;
   currentUser: string;
-  userID: string;
+  userName: string;
 }
 
 export default function DeletePost(props: Props) {
@@ -22,7 +22,7 @@ export default function DeletePost(props: Props) {
       deletePost();
   };
 
-  if (props.currentUser === props.userID) {
+  if (props.currentUser === props.userName) {
     return (
       <IconButton onClick={handleSubmission}>
         <DeleteIcon />
@@ -44,12 +44,12 @@ const GQL_GET_ALL_POSTS = gql`
     getAllPosts {
       id
       title
-      userID
+      userName
       content
       time
       likes
       comments {
-        userID
+        userName
         content
         time
         likes
