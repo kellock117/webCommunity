@@ -3,7 +3,6 @@ import { useForm } from "../util/hooks";
 import { AuthContext } from "../context/authContext";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { useNavigate } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -23,7 +22,6 @@ const theme = createTheme();
 
 export default function Register() {
   const context = useContext(AuthContext);
-  const navigate = useNavigate();
   const [errors, setErrors] = useState("");
 
   const { onChange, onSubmit, values } = useForm(createUserCallBack, {
@@ -36,7 +34,7 @@ export default function Register() {
     update(_, { data: { createUser: userData } }) {
       context.login(userData);
       window.alert("Creation Successful");
-      navigate("/");
+      window.location.replace("/");
     },
     onError(error) {
       setErrors(error.message);
