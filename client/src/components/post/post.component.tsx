@@ -33,7 +33,7 @@ export default function Post(post: PostProps) {
     setExpanded(!expanded);
   };
 
-  const gridSize = isMobile ? 10 : 8;
+  const gridSize = isMobile ? 12 : 8;
 
   return (
     <Grid item key={post.id} xs={gridSize} justifyContent="center">

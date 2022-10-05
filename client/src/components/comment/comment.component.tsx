@@ -57,7 +57,7 @@ export default function Comment(props: Props) {
   }
 
   const currentTime = new Date();
-  const commentBoxSize = isMobile ? "20ch" : "49ch";
+  const commentBoxSize = isMobile ? "25ch" : "49ch";
   useEffect(() => {
     if (getComments) {
       props.setCommentLength(getComments.length);
