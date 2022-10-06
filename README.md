@@ -19,9 +19,8 @@ backend: node.js(framework), apollo-server(graphql), mongoose(mongodb)
 
 # Funtions implemented
 
-login with jwt, create post, view post, like post, post caching, create comment, delete post, like comment, delete comment
+login with jwt, create post, view post, like post, post caching, create comment, delete post, like comment, delete comment, react-mobile-detect, pagination
 
 # Functions to be implemented
 
-react-mobile-detect
-
+???
