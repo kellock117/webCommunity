@@ -1,15 +1,13 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
-import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import Post from "./post.component";
 
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
 
 const theme = createTheme();
 
@@ -23,31 +21,40 @@ interface PostProps {
   likes: string[];
 }
 
-export default function PostList() {
-  const { data, loading, error } = useQuery(GQL_GET_ALL_POSTS);
+interface Props {
+  data: any;
+  loading: boolean;
+  error: any;
+  page: number;
+  nextPage: any;
+  previousPage: any;
+}
+
+export default function PostList(props: Props) {
   const { user } = useContext(AuthContext);
 
-  if (loading) {
-    return <CircularProgress style={{ marginLeft: "50%" }} />;
+  if (props.loading) {
+    return <CircularProgress style={{ marginLeft: "40%" }} />;
   }
 
-  if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
+  if (props.error) {
+    return <Alert severity="error">{props.error.message}</Alert>;
   }
 
-  if (data) {
-    const { getAllPosts: posts } = data;
+  if (props.data) {
+    const posts = props.data.getPostByPage;
+
+    if (posts.length === 0) {
+      return (
+        <Alert severity="error">
+          No more posts. Press logo to go to the first page
+        </Alert>
+      );
+    }
 
     return (
       <ThemeProvider theme={theme}>
         <main>
-          <Box
-            sx={{
-              bgcolor: "background.paper",
-              pt: 8,
-              pb: 6,
-            }}
-          ></Box>
           <Container maxWidth="md">
             <Grid container spacing={8} justifyContent="center">
               {posts.map((post: PostProps) => {
@@ -65,22 +72,42 @@ export default function PostList() {
                 );
               })}
             </Grid>
+            {props.page === 1 ? (
+              <Button
+                variant="contained"
+                onClick={props.nextPage}
+                size="large"
+                sx={{ marginLeft: "40%", mt: 3 }}
+              >
+                Load More
+              </Button>
+            ) : (
+              <Grid container>
+                <Grid xs={6}>
+                  <Button
+                    variant="contained"
+                    onClick={props.previousPage}
+                    size="large"
+                    sx={{ marginLeft: "55%", mt: 3 }}
+                  >
+                    Previous Page
+                  </Button>
+                </Grid>
+                <Grid xs={6}>
+                  <Button
+                    variant="contained"
+                    onClick={props.nextPage}
+                    size="large"
+                    sx={{ mt: 3 }}
+                  >
+                    Load More
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
           </Container>
         </main>
       </ThemeProvider>
     );
   }
 }
-
-const GQL_GET_ALL_POSTS = gql`
-  query GetAllPosts {
-    getAllPosts {
-      id
-      title
-      userName
-      content
-      time
-      likes
-    }
-  }
-`;

@@ -1,26 +1,31 @@
 import React, { useContext } from "react";
+import { AuthContext } from "../../context/authContext";
+
 import Button from "@mui/material/Button";
+import ButtonBase from "@mui/material/ButtonBase";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-import { AuthContext } from "../../context/authContext";
-
 export default function Logout() {
   const { user, logout } = useContext(AuthContext);
+  const goHome = () => {
+    window.location.replace("/");
+  };
 
   return (
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Typography color="green" variant="h5">
-          SIM
-        </Typography>
-        <Typography variant="h5" sx={{ flex: 1 }}>
-          pleCommunity
-        </Typography>
-
+        <ButtonBase>
+          <Typography color="green" variant="h5" onClick={goHome}>
+            SIM
+          </Typography>
+          <Typography variant="h5" onClick={goHome}>
+            pleCommunity
+          </Typography>
+        </ButtonBase>
         {user && (
           <>
-            <Typography variant="h6" sx={{ mr: 2 }}>
+            <Typography variant="h6" sx={{ mr: 2, flex: 1 }} align="right">
               {user.userName}
             </Typography>
             <Button variant="outlined" onClick={logout} size="small">

@@ -22,7 +22,7 @@ module.exports = gql`
     likes: [String]
   }
   type Query {
-    getAllPosts: [Post]
+    getPostByPage(page: Int!): [Post]
     getComments(postID: String!): [Comment]
   }
   input RegisterInput {

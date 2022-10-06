@@ -4,8 +4,13 @@ const { UserInputError } = require("apollo-server");
 
 module.exports = {
   Query: {
-    getAllPosts: async () => {
-      const posts = await Post.find().sort({ time: -1 });
+    getPostByPage: async (_, { page }) => {
+      const numberOfSkips = (page - 1) * 10;
+      const posts = await Post.find()
+        .sort({ time: -1 })
+        .skip(numberOfSkips)
+        .limit(10);
+
       return posts;
     },
   },
