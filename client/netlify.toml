@@ -5,12 +5,12 @@
   
 [[redirects]]
   from = "/login"
-  to = "http://ec2-54-190-97-137.us-west-2.compute.amazonaws.com:5000/"
+  to = "https://simple-web-community-kellock117.koyeb.app/login"
   status = 200
   force = true
 
 [[redirects]]
   from = "/register"
-  to = "http://ec2-54-190-97-137.us-west-2.compute.amazonaws.com:5000/"
+  to = "https://simple-web-community-kellock117.koyeb.app/register"
   status = 200
   force = true
