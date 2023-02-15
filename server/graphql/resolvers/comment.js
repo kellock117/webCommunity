@@ -1,3 +1,4 @@
+const Post = require("../../models/post.js");
 const Comment = require("../../models/comment.js");
 const checkAuth = require("../../util/authentication.js");
 const { UserInputError } = require("apollo-server");
@@ -17,15 +18,17 @@ module.exports = {
       context
     ) => {
       const user = checkAuth(context);
+      const post = await Post.findById(postID);
 
       const comment = new Comment({
-        postID: postID,
         content: content,
         userName: user.userName,
         time: new Date().toISOString(),
       });
 
+      post.comments.push(comment);
       const res = await comment.save();
+      post.save();
       return res;
     },
     deleteComment: async (_, { commentID }, context) => {

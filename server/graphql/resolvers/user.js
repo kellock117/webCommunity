@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user.js");
+const History = require("../../models/history.js");
 const { UserInputError } = require("apollo-server");
 
 function generateToken(user) {
@@ -45,6 +46,11 @@ module.exports = {
         userName: userName,
       });
 
+      const history = new History({
+        userName: userName,
+      });
+      await history.save();
+
       // save the user information into mongodb
       const res = await user.save();
       const token = generateToken(res);
@@ -61,7 +67,7 @@ module.exports = {
       if (!user) throw new UserInputError("id does not exist");
 
       // compare input password to user's password
-      const match = bcrypt.compare(password, user.password);
+      const match = await bcrypt.compare(password, user.password);
       if (!match) throw new UserInputError("wrong password");
 
       const token = generateToken(user);

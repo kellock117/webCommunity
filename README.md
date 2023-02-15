@@ -6,8 +6,6 @@
   <br/>
   <a href="https://simcomm.netlify.app" target="_blank">https://simcomm.netlify.app</a>
   (Frontend hosted with <a href="https://www.netlify.com/" target="_blank">Netlify</a>) <br/>
-  <a href="https://simple-web-community-kellock117.koyeb.app/">https://simple-web-community-kellock117.koyeb.app</a> 
-  (Backend hosted with <a href="https://app.koyeb.com/" target="_blank">Koyeb</a>)
 </p>
 <p align="center">
   <a href="https://app.netlify.com/sites/simcomm/deploys" target="_blank">
