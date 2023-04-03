@@ -28,11 +28,11 @@ const userResolver = {
         throw new UserInputError("id already exists");
       }
 
-      // const oldUserName = await User.findOne({ userName: userName });
+      const oldUserName = await User.findOne({ userName: userName });
 
-      // if (oldUserName) {
-      //   throw new UserInputError("user name already exists");
-      // }
+      if (oldUserName) {
+        throw new UserInputError("user name already exists");
+      }
 
       if (password != confirmPassword) {
         throw new UserInputError("passwords dose not match");

@@ -24,7 +24,6 @@ const postResolver = {
         title: title,
         userName: user.userName,
         content: content,
-        time: new Date().toISOString(),
       });
 
       const res = await post.save();
