@@ -1,8 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useForm } from "../util/hooks";
-import { AuthContext } from "../context/authContext";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 // material ui for designing
 import Avatar from "@mui/material/Avatar";
@@ -18,6 +15,11 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
+
+import { useForm } from "../util/hooks";
+import { AuthContext } from "../context/authContext";
+import { GQL_LOGIN } from "../constants/user";
+
 const theme = createTheme();
 
 export default function Login() {
@@ -107,12 +109,3 @@ export default function Login() {
     </ThemeProvider>
   );
 }
-
-const GQL_LOGIN = gql`
-  mutation loginUserCallback($id: String!, $password: String!) {
-    login(loginInput: { id: $id, password: $password }) {
-      id
-      token
-    }
-  }
-`;

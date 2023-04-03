@@ -1,8 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useForm } from "../util/hooks";
-import { AuthContext } from "../context/authContext";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -17,6 +14,10 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
+
+import { useForm } from "../util/hooks";
+import { AuthContext } from "../context/authContext";
+import { GQL_REGISTER } from "../constants/user";
 
 const theme = createTheme();
 
@@ -45,7 +46,6 @@ export default function Register() {
 
   function createUserCallBack() {
     createUser();
-    console.log(values);
   }
 
   return (
@@ -143,24 +143,3 @@ export default function Register() {
     </ThemeProvider>
   );
 }
-
-const GQL_REGISTER = gql`
-  mutation createUserCallback(
-    $id: String!
-    $password: String!
-    $confirmPassword: String!
-    $userName: String!
-  ) {
-    createUser(
-      registerInput: {
-        id: $id
-        password: $password
-        confirmPassword: $confirmPassword
-        userName: $userName
-      }
-    ) {
-      id
-      token
-    }
-  }
-`;

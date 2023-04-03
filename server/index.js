@@ -1,9 +1,11 @@
-const mongoose = require("mongoose");
-const { ApolloServer } = require("apollo-server");
-const typeDefs = require("./graphql/typeDefs");
-const resolvers = require("./graphql/resolvers");
-const path = require("path");
-require("dotenv").config({ path: path.resolve(__dirname, "./.env") });
+import mongoose from "mongoose";
+import { ApolloServer } from "apollo-server";
+import dotenv from "dotenv";
+
+import typeDefs from "./graphql/typeDefs/index.typeDefs.js";
+import resolvers from "./graphql/resolvers/index.resolver.js";
+
+dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 

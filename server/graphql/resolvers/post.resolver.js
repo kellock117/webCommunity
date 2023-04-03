@@ -1,8 +1,8 @@
-const Post = require("../../models/post.js");
-const checkAuth = require("../../util/authentication.js");
-const { UserInputError } = require("apollo-server");
+import Post from "../../models/post.model.js";
+import checkAuth from "../../util/authentication.js";
+import { UserInputError } from "apollo-server";
 
-module.exports = {
+const postResolver = {
   Query: {
     // need to change for performance
     getPostByPage: async (_, { page }) => {
@@ -66,3 +66,5 @@ module.exports = {
     },
   },
 };
+
+export default postResolver;

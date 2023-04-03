@@ -1,7 +1,7 @@
-const { AuthenticationError } = require("apollo-server");
-const jwt = require("jsonwebtoken");
+import { AuthenticationError } from "apollo-server";
+import jwt from "jsonwebtoken";
 
-module.exports = context => {
+const auth = context => {
   // context = { ... headers }
   const authHeader = context.req.headers.authorization;
   if (authHeader) {
@@ -19,3 +19,5 @@ module.exports = context => {
   }
   throw new Error("Authorization header must be provided");
 };
+
+export default auth;

@@ -1,9 +1,9 @@
-const Post = require("../../models/post.js");
-const Comment = require("../../models/comment.js");
-const checkAuth = require("../../util/authentication.js");
-const { UserInputError } = require("apollo-server");
+import Post from "../../models/post.model.js";
+import Comment from "../../models/comment.model.js";
+import checkAuth from "../../util/authentication.js";
+import { UserInputError } from "apollo-server";
 
-module.exports = {
+const commentResolver = {
   Query: {
     getComments: async (_, { postID }) => {
       const comments = await Comment.find({ postID: postID });
@@ -66,3 +66,5 @@ module.exports = {
     },
   },
 };
+
+export default commentResolver;
