@@ -1,10 +1,12 @@
-import typeDefs from "../graphql/typeDefs/user.typeDefs";
-import resolvers from "../graphql/resolvers/user.resolver";
+// import typeDefs from "../graphql/typeDefs/user.typeDefs";
+// import resolvers from "../graphql/resolvers/user.resolver";
+import typeDefs from "../graphql/typeDefs/index.typeDefs";
+import resolvers from "../graphql/resolvers/index.resolver";
 import { GQL_REGISTER, GQL_LOGIN, GQL_DELETE_USER } from "../constants/user";
 import { init, close, run } from "./util";
 
 beforeAll(async () => {
-  await init({ typeDefs: typeDefs, resolvers: resolvers });
+  await init({ typeDefs: typeDefs, resolvers: resolvers, port: 5001 });
 });
 
 afterAll(async () => {

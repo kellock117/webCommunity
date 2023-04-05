@@ -32,6 +32,5 @@
   "transformIgnorePatterns": ["<rootDir>/node_modules/"],
   "transform": {
     "^.+\\.(js|jsx)?$": "babel-jest"
-  },
-  "testTimeout": 20000
+  }
 }

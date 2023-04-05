@@ -6,17 +6,20 @@ dotenv.config();
 
 let server;
 
-export const init = async ({ typeDefs, resolvers }) => {
+export const init = async ({ typeDefs, resolvers, port }) => {
   server = await initialize({
     typeDefs: typeDefs,
     resolvers: resolvers,
+    port: port,
   });
 };
 
 export const close = async () => await disconnect();
 
-export const createContextValue = (val = process.env.LOGIN_TOKEN) => {
-  return { req: { headers: { authorization: val } } };
+export const validContextValue = (val = true) => {
+  return val
+    ? { req: { headers: { authorization: process.env.LOGIN_TOKEN } } }
+    : { req: { headers: { authorization: "Bearer a" } } };
 };
 
 const unwrap = val => {
@@ -29,7 +32,7 @@ const unwrap = val => {
 export const run = async ({
   query,
   variables,
-  contextValue = createContextValue(),
+  contextValue = validContextValue(),
 }) =>
   unwrap(
     await server.executeOperation(

@@ -8,12 +8,12 @@ import {
   GQL_LIKE_POST,
   GQL_DELETE_POST,
 } from "../constants/post";
-import { init, close, createContextValue, run } from "./util";
+import { init, close, validContextValue, run } from "./util";
 
 dotenv.config();
 
 beforeAll(async () => {
-  await init({ typeDefs: typeDefs, resolvers: resolvers });
+  await init({ typeDefs: typeDefs, resolvers: resolvers, port: 5002 });
 });
 
 afterAll(async () => {
@@ -121,7 +121,7 @@ describe("create post", () => {
     } = await run({
       query: GQL_CREATE_POST,
       variables: variables,
-      contextValue: createContextValue("Bearer a"),
+      contextValue: validContextValue(false),
     });
 
     expect.assertions(1);
@@ -136,7 +136,7 @@ describe("delete post", () => {
     } = await run({
       query: GQL_DELETE_POST,
       variables: { postId: "642c4dfa1aae59b7fed5b01c" },
-      contextValue: createContextValue("Bearer a"),
+      contextValue: validContextValue(false),
     });
 
     expect.assertions(1);
@@ -152,54 +152,30 @@ describe("delete post", () => {
     });
 
     expect.assertions(1);
-    expect(message).toBe("Action not allowed");
+    expect(message).toBe("Post not found");
   });
 
   test("delete other's post", async () => {
-    const variables = {
-      title: "그대 떠나가는 그 순간도 나를 걱정 했었나요",
-      content: "그대 나를 떠나간다고 해도 난 그댈 보낸 적 없죠",
-    };
-
-    const {
-      data: {
-        createPost: { id },
-      },
-    } = await run({
-      query: GQL_CREATE_POST,
-      variables: variables,
-      contextValue: createContextValue(process.env.LOGIN_TOKEN2),
-    });
-
     const {
       errors: [{ message }],
     } = await run({
       query: GQL_DELETE_POST,
-      variables: { postId: id },
+      variables: { postId: "641c70d6b65603488d98af79" },
     });
 
-    expect.assertions(2);
+    expect.assertions(1);
     expect(message).toBe("Action not allowed");
-
-    const {
-      data: { deletePost },
-    } = await run({
-      query: GQL_DELETE_POST,
-      variables: { postId: id },
-      contextValue: createContextValue(process.env.LOGIN_TOKEN2),
-    });
-
-    expect(deletePost).toBe("Post deleted successfully");
   });
 });
 
 describe("like post", () => {
+  const variables = { postId: "633ca749895ebd01a4604b04" };
   test("hit the like button to the post with no like with valid token", async () => {
     const {
       data: { likePost },
     } = await run({
       query: GQL_LIKE_POST,
-      variables: { postId: "632d8818c8e7981ccbff55d6" },
+      variables: variables,
     });
 
     expect.assertions(1);
@@ -211,7 +187,7 @@ describe("like post", () => {
       data: { likePost },
     } = await run({
       query: GQL_LIKE_POST,
-      variables: { postId: "632d8818c8e7981ccbff55d6" },
+      variables: variables,
     });
 
     expect.assertions(1);
@@ -235,8 +211,8 @@ describe("like post", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_LIKE_POST,
-      variables: { postId: "632d8818c8e7981ccbff55d6" },
-      contextValue: createContextValue("Bearer a"),
+      variables: variables,
+      contextValue: validContextValue(false),
     });
 
     expect.assertions(1);

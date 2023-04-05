@@ -5,11 +5,9 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 
 dotenv.config();
 
-const PORT = process.env.TEST_PORT || 5000;
-
 let server;
 
-export const initialize = async ({ typeDefs, resolvers }) => {
+export const initialize = async ({ typeDefs, resolvers, port }) => {
   server = new ApolloServer({
     typeDefs,
     resolvers,
@@ -22,7 +20,7 @@ export const initialize = async ({ typeDefs, resolvers }) => {
     })
     .then(async () => {
       await startStandaloneServer(server, {
-        listen: { port: PORT },
+        listen: { port: port },
       });
     })
     .catch(error => {

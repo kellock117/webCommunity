@@ -1,16 +1,17 @@
 import Post from "../../models/post.model.js";
 import checkAuth from "../../util/authentication.js";
 
+const isNull = post => {
+  if (post === null) throw new Error("Post not found");
+};
+
 const postResolver = {
   Query: {
     getPostByPage: async (_, { getPostByPageInput: { page, lastPostId } }) => {
       // use fast pagination with lastPostId from the second page
       const options = page > 1 ? { _id: { $lt: lastPostId } } : {};
 
-      const posts = await Post.find(options)
-        .limit(10)
-        .sort({ $natural: -1 })
-        .populate("comments");
+      const posts = await Post.find(options).limit(10).sort({ $natural: -1 });
 
       return posts;
     },
@@ -32,23 +33,20 @@ const postResolver = {
     deletePost: async (_, { postId }, context) => {
       const user = checkAuth(context);
 
-      try {
-        const post = await Post.findById(postId);
-        if (user.userName === post?.userName) {
-          await post.delete();
-          return "Post deleted successfully";
-        } else {
-          throw new Error("Action not allowed");
-        }
-      } catch (error) {
-        throw new Error(error.message);
-      }
+      const post = await Post.findById(postId);
+      isNull(post);
+
+      if (user.userName !== post?.userName)
+        throw new Error("Action not allowed");
+
+      await post.delete();
+      return "Post deleted successfully";
     },
     likePost: async (_, { postId }, context) => {
       const user = checkAuth(context);
-      const post = await Post.findById(postId);
 
-      if (post === null) throw new Error("Post not found");
+      const post = await Post.findById(postId);
+      isNull(post);
 
       const checkLike = post.likes.indexOf(user.userName);
 
@@ -57,6 +55,7 @@ const postResolver = {
         await post.save();
         return "liked";
       }
+
       post.likes.splice(checkLike, 1);
       await post.save();
 

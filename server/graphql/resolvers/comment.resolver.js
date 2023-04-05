@@ -2,6 +2,10 @@ import Post from "../../models/post.model.js";
 import Comment from "../../models/comment.model.js";
 import checkAuth from "../../util/authentication.js";
 
+const isNull = comment => {
+  if (comment === null) throw new Error("Comment not found");
+};
+
 const commentResolver = {
   Query: {
     getComments: async (_, { postId }) => {
@@ -21,6 +25,8 @@ const commentResolver = {
       const user = checkAuth(context);
       const post = await Post.findById(postId);
 
+      if (post === null) throw new Error("Post not found");
+
       const comment = new Comment({
         content: content,
         userName: user.userName,
@@ -35,36 +41,35 @@ const commentResolver = {
     },
     deleteComment: async (_, { commentId }, context) => {
       const user = checkAuth(context);
-      try {
-        const comment = await Comment.findById(commentId);
-        if (user.userName === comment.userName) {
-          await comment.delete();
-          return "Comment deleted successfully";
-        } else {
-          throw new AuthentificationError("Action not allowed");
-        }
-      } catch (error) {
-        throw new Error(error.message);
-      }
+
+      const comment = await Comment.findById(commentId);
+      isNull(comment);
+
+      if (user.userName !== comment?.userName)
+        throw new Error("Action not allowed");
+
+      await comment.delete();
+
+      return "Comment deleted successfully";
     },
     likeComment: async (_, { commentId }, context) => {
       const user = checkAuth(context);
       const comment = await Comment.findById(commentId);
 
-      if (comment) {
-        const checkLike = comment.likes.indexOf(user.userName);
+      isNull(comment);
 
-        if (checkLike == -1) {
-          comment.likes.push(user.userName);
-        } else {
-          comment.likes.splice(checkLike, 1);
-        }
+      const checkLike = comment.likes.indexOf(user.userName);
 
+      if (checkLike == -1) {
+        comment.likes.push(user.userName);
         await comment.save();
-        return comment;
-      } else {
-        throw new Error("Comment not found");
+        return "liked";
       }
+
+      comment.likes.splice(checkLike, 1);
+      await comment.save();
+
+      return "unliked";
     },
   },
 };

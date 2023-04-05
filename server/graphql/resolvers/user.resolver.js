@@ -23,19 +23,14 @@ const userResolver = {
     ) => {
       // check if the user already exists
       const oldUser = await User.findOne({ id: id });
-      if (oldUser) {
-        throw new Error("id already exists");
-      }
+      if (oldUser) throw new Error("id already exists");
 
       const oldUserName = await User.findOne({ userName: userName });
 
-      if (oldUserName) {
-        throw new Error("user name already exists");
-      }
+      if (oldUserName) throw new Error("user name already exists");
 
-      if (password != confirmPassword) {
+      if (password != confirmPassword)
         throw new Error("passwords dose not match");
-      }
 
       // encrypt the password
       password = await bcrypt.hash(password, 7);
