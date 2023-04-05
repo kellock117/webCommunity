@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+
+import { GQL_LIKE_POST } from "../../constants/post";
 
 interface props {
   id: React.Key;
@@ -37,11 +38,3 @@ export default function Like(props: props) {
     </IconButton>
   );
 }
-
-const GQL_LIKE_POST = gql`
-  mutation LikePost($postID: ID!) {
-    likePost(postID: $postID) {
-      likes
-    }
-  }
-`;

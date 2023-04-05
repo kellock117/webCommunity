@@ -24,7 +24,7 @@ interface PostProps {
 }
 
 export default function Post(post: PostProps) {
-  const postDate = new Date(post.time);
+  const postDate = new Date(Number(post.time));
 
   const [commentLength, setCommentLength] = useState(0);
 

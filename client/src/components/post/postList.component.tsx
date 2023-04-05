@@ -26,31 +26,61 @@ interface Props {
   loading: boolean;
   error: any;
   page: number;
+  lastPostId: any;
   nextPage: any;
   previousPage: any;
 }
 
-export default function PostList(props: Props) {
+export default function PostList({
+  data,
+  loading,
+  error,
+  page,
+  lastPostId,
+  nextPage,
+  previousPage,
+}: Props) {
   const { user } = useContext(AuthContext);
 
-  if (props.loading) {
-    return <CircularProgress style={{ marginLeft: "40%" }} />;
-  }
+  const createLoadMoreButton = ({ marginLeft }: { marginLeft: boolean }) => {
+    const sxVariables: any = { mt: 3 };
+    if (marginLeft) sxVariables["marginLeft"] = "40%";
 
-  if (props.error) {
-    return <Alert severity="error">{props.error.message}</Alert>;
-  }
+    const loadMoreButton = (
+      <Button
+        variant="contained"
+        onClick={nextPage}
+        size="large"
+        sx={sxVariables}
+      >
+        Load More
+      </Button>
+    );
 
-  if (props.data) {
-    const posts = props.data.getPostByPage;
+    return loadMoreButton;
+  };
+
+  if (data) {
+    const posts: Array<PostProps> = data.getPostByPage;
 
     if (posts.length === 0) {
       return (
         <Alert severity="error">
-          No more posts. Press logo to go to the first page
+          No more posts. Press the logo to go to the first page.
         </Alert>
       );
     }
+
+    if (loading) {
+      return <CircularProgress style={{ marginLeft: "40%" }} />;
+    }
+
+    if (error) {
+      return <Alert severity="error">{error.message}</Alert>;
+    }
+
+    // when the data is ready, store the last id for the pagination
+    lastPostId.current = posts.at(-1).id;
 
     return (
       <ThemeProvider theme={theme}>
@@ -72,36 +102,22 @@ export default function PostList(props: Props) {
                 );
               })}
             </Grid>
-            {props.page === 1 ? (
-              <Button
-                variant="contained"
-                onClick={props.nextPage}
-                size="large"
-                sx={{ marginLeft: "40%", mt: 3 }}
-              >
-                Load More
-              </Button>
+            {page === 1 ? (
+              createLoadMoreButton({ marginLeft: true })
             ) : (
               <Grid container>
-                <Grid xs={6}>
+                <Grid item xs={6}>
                   <Button
                     variant="contained"
-                    onClick={props.previousPage}
+                    onClick={previousPage}
                     size="large"
                     sx={{ marginLeft: "55%", mt: 3 }}
                   >
                     Previous Page
                   </Button>
                 </Grid>
-                <Grid xs={6}>
-                  <Button
-                    variant="contained"
-                    onClick={props.nextPage}
-                    size="large"
-                    sx={{ mt: 3 }}
-                  >
-                    Load More
-                  </Button>
+                <Grid item xs={6}>
+                  {createLoadMoreButton({ marginLeft: false })}
                 </Grid>
               </Grid>
             )}

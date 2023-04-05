@@ -1,20 +1,14 @@
-import { initialize, disconnect } from "./server";
 import typeDefs from "../graphql/typeDefs/user.typeDefs";
 import resolvers from "../graphql/resolvers/user.resolver";
 import { GQL_REGISTER, GQL_LOGIN, GQL_DELETE_USER } from "../constants/user";
-
-let mutate;
+import { init, close, run } from "./util";
 
 beforeAll(async () => {
-  const server = await initialize({
-    typeDefs: typeDefs,
-    resolvers: resolvers,
-  });
-  mutate = server.mutate;
+  await init({ typeDefs: typeDefs, resolvers: resolvers });
 });
 
 afterAll(async () => {
-  await disconnect();
+  await close();
 });
 
 // create random string which the length is 34
@@ -52,8 +46,8 @@ describe("create user", () => {
       data: {
         createUser: { token },
       },
-    } = await mutate({
-      mutation: GQL_REGISTER,
+    } = await run({
+      query: GQL_REGISTER,
       variables: variables,
     });
 
@@ -62,8 +56,8 @@ describe("create user", () => {
 
     const {
       data: { deleteUser },
-    } = await mutate({
-      mutation: GQL_DELETE_USER,
+    } = await run({
+      query: GQL_DELETE_USER,
       variables: { id: variables.id },
     });
 
@@ -74,8 +68,8 @@ describe("create user", () => {
     const variables = createUserInput({ id: "test" });
     const {
       errors: [{ message }],
-    } = await mutate({
-      mutation: GQL_REGISTER,
+    } = await run({
+      query: GQL_REGISTER,
       variables: variables,
     });
 
@@ -87,8 +81,8 @@ describe("create user", () => {
     const variables = createUserInput({ userName: "test" });
     const {
       errors: [{ message }],
-    } = await mutate({
-      mutation: GQL_REGISTER,
+    } = await run({
+      query: GQL_REGISTER,
       variables: variables,
     });
 
@@ -103,8 +97,8 @@ describe("create user", () => {
     });
     const {
       errors: [{ message }],
-    } = await mutate({
-      mutation: GQL_REGISTER,
+    } = await run({
+      query: GQL_REGISTER,
       variables: variables,
     });
 
@@ -120,8 +114,8 @@ describe("login", () => {
       data: {
         login: { token },
       },
-    } = await mutate({
-      mutation: GQL_LOGIN,
+    } = await run({
+      query: GQL_LOGIN,
       variables: variables,
     });
 
@@ -133,8 +127,8 @@ describe("login", () => {
     const variables = createLoginInput({ password: "test" });
     const {
       errors: [{ message }],
-    } = await mutate({
-      mutation: GQL_LOGIN,
+    } = await run({
+      query: GQL_LOGIN,
       variables: variables,
     });
 
@@ -146,8 +140,8 @@ describe("login", () => {
     const variables = createLoginInput({ id: "test" });
     const {
       errors: [{ message }],
-    } = await mutate({
-      mutation: GQL_LOGIN,
+    } = await run({
+      query: GQL_LOGIN,
       variables: variables,
     });
 

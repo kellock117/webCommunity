@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { UserInputError } from "apollo-server";
 
 import User from "../../models/user.model.js";
 // import History from "../../models/history.js";
@@ -12,7 +11,7 @@ function generateToken(user) {
       password: user.password,
     },
     process.env.SECRET_KEY,
-    { expiresIn: "30m" }
+    { expiresIn: "1y" }
   );
 }
 
@@ -25,17 +24,17 @@ const userResolver = {
       // check if the user already exists
       const oldUser = await User.findOne({ id: id });
       if (oldUser) {
-        throw new UserInputError("id already exists");
+        throw new Error("id already exists");
       }
 
       const oldUserName = await User.findOne({ userName: userName });
 
       if (oldUserName) {
-        throw new UserInputError("user name already exists");
+        throw new Error("user name already exists");
       }
 
       if (password != confirmPassword) {
-        throw new UserInputError("passwords dose not match");
+        throw new Error("passwords dose not match");
       }
 
       // encrypt the password
@@ -65,11 +64,11 @@ const userResolver = {
     login: async (_, { loginInput: { id, password } }) => {
       // find user by id and check whether it exists
       const user = await User.findOne({ id: id });
-      if (!user) throw new UserInputError("id does not exist");
+      if (!user) throw new Error("id does not exist");
 
       // compare input password to user's password
       const match = await bcrypt.compare(password, user.password);
-      if (!match) throw new UserInputError("wrong password");
+      if (!match) throw new Error("wrong password");
 
       const token = generateToken(user);
 
@@ -85,7 +84,7 @@ const userResolver = {
 
       try {
         const user = await User.findOne({ id: id });
-        if (user === null) throw new UserInputError("No such user");
+        if (user === null) throw new Error("No such user");
 
         await user.delete();
 

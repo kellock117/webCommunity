@@ -1,7 +1,5 @@
 import React from "react";
-import { useForm } from "../../util/hooks";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -11,6 +9,10 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import { useForm } from "../../util/hooks";
+import { GQL_GET_POST_BY_PAGE, GQL_CREATE_POST } from "../../constants/post";
+
 const theme = createTheme();
 
 export default function NewPost() {
@@ -20,7 +22,13 @@ export default function NewPost() {
   });
 
   const [createPost] = useMutation(GQL_CREATE_POST, {
-    refetchQueries: [{ query: GQL_GET_ALL_POSTS }],
+    update(cache, { data }) {
+      let existingData = cache.readQuery({
+        query: GQL_GET_POST_BY_PAGE,
+        variables: { page: 1 },
+      });
+      console.log(existingData);
+    },
     variables: values,
   });
 
@@ -75,41 +83,3 @@ export default function NewPost() {
     </ThemeProvider>
   );
 }
-
-const GQL_CREATE_POST = gql`
-  mutation createPostCallback($title: String!, $content: String!) {
-    createPost(createPostInput: { title: $title, content: $content }) {
-      id
-      title
-      userName
-      content
-      time
-      likes
-      comments {
-        userName
-        content
-        time
-        likes
-      }
-    }
-  }
-`;
-
-const GQL_GET_ALL_POSTS = gql`
-  query GetAllPosts {
-    getAllPosts {
-      id
-      title
-      userName
-      content
-      time
-      likes
-      comments {
-        userName
-        content
-        time
-        likes
-      }
-    }
-  }
-`;

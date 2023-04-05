@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import NavBar from "../components/others/navbar.component";
 import NewPost from "../components/post/newPost.component";
 import PostList from "../components/post/postList.component";
+import { GQL_GET_POST_BY_PAGE } from "../constants/post";
 
 export default function Main() {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState<number>(1);
+  const lastPostId = useRef<string>("");
   const { data, loading, error } = useQuery(GQL_GET_POST_BY_PAGE, {
     variables: {
       page: page,
+      lastPostId: lastPostId.current,
     },
   });
   const nextPage = () => {
@@ -29,22 +31,10 @@ export default function Main() {
         loading={loading}
         error={error}
         page={page}
+        lastPostId={lastPostId}
         nextPage={nextPage}
         previousPage={previousPage}
       />
     </div>
   );
 }
-
-const GQL_GET_POST_BY_PAGE = gql`
-  query GetPostByPage($page: Int!) {
-    getPostByPage(page: $page) {
-      id
-      title
-      userName
-      content
-      time
-      likes
-    }
-  }
-`;

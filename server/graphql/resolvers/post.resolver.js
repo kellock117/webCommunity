@@ -1,16 +1,13 @@
 import Post from "../../models/post.model.js";
 import checkAuth from "../../util/authentication.js";
-import { UserInputError } from "apollo-server";
 
 const postResolver = {
   Query: {
-    // need to change for performance
-    getPostByPage: async (_, { page }) => {
-      const numberOfSkips = (page - 1) * 10;
-      const posts = await Post.find()
-        .sort({ natural: -1 })
-        .limit(10)
-        .populate("comments");
+    getPostByPage: async (_, { getPostByPageInput: { page, lastPostId } }) => {
+      // use fast pagination with lastPostId from the second page
+      const options = page > 1 ? { _id: { $lt: lastPostId } } : {};
+
+      const posts = await Post.find(options).limit(10).sort({ $natural: -1 });
 
       return posts;
     },
@@ -29,38 +26,39 @@ const postResolver = {
       const res = await post.save();
       return res;
     },
-    deletePost: async (_, { postID }, context) => {
+    deletePost: async (_, { postId }, context) => {
       const user = checkAuth(context);
 
       try {
-        const post = await Post.findById(postID);
-        if (user.userName === post.userName) {
+        const post = await Post.findById(postId);
+        if (user.userName === post?.userName) {
           await post.delete();
           return "Post deleted successfully";
         } else {
-          throw new AuthentificationError("Action not allowed");
+          throw new Error("Action not allowed");
         }
       } catch (error) {
         throw new Error(error.message);
       }
     },
-    likePost: async (_, { postID }, context) => {
+    likePost: async (_, { postId }, context) => {
       const user = checkAuth(context);
-      const post = await Post.findById(postID);
+      const post = await Post.findById(postId);
 
       if (post) {
         const checkLike = post.likes.indexOf(user.userName);
 
         if (checkLike == -1) {
           post.likes.push(user.userName);
-        } else {
-          post.likes.splice(checkLike, 1);
+          await post.save();
+          return "liked";
         }
-
+        post.likes.splice(checkLike, 1);
         await post.save();
-        return post.likes;
+
+        return "unliked";
       } else {
-        throw new UserInputError("Post not found");
+        throw new Error("Post not found");
       }
     },
   },

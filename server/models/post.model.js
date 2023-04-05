@@ -8,9 +8,8 @@ const postSchema = new mongoose.Schema({
     required: true,
     maxLength: [512, "max length: 512"],
   },
-  createdAt: { type: Date, default: Date.now },
+  time: { type: Date, default: Date.now },
   likes: { type: [String], default: null },
-  comments: [{ type: mongoose.Types.ObjectId, ref: "comment", default: null }],
 });
 
 const postModel = mongoose.model("post", postSchema);

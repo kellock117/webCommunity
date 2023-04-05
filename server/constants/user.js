@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export const GQL_REGISTER = gql`
-  mutation createUserCallback(
+  mutation CreateUser(
     $id: String!
     $password: String!
     $confirmPassword: String!
@@ -22,7 +22,7 @@ export const GQL_REGISTER = gql`
 `;
 
 export const GQL_LOGIN = gql`
-  mutation loginUserCallback($id: String!, $password: String!) {
+  mutation LoginUser($id: String!, $password: String!) {
     login(loginInput: { id: $id, password: $password }) {
       id
       token

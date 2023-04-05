@@ -1,7 +1,6 @@
 import Post from "../../models/post.model.js";
 import Comment from "../../models/comment.model.js";
 import checkAuth from "../../util/authentication.js";
-import { UserInputError } from "apollo-server";
 
 const commentResolver = {
   Query: {
@@ -61,7 +60,7 @@ const commentResolver = {
         await comment.save();
         return comment;
       } else {
-        throw new UserInputError("Comment not found");
+        throw new Error("Comment not found");
       }
     },
   },

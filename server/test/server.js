@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { ApolloServer } from "apollo-server";
-import { createTestClient } from "apollo-server-testing";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
 
 dotenv.config();
 
@@ -20,14 +20,16 @@ export const initialize = async ({ typeDefs, resolvers }) => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    .then(() => {
-      server.listen({ port: PORT });
+    .then(async () => {
+      await startStandaloneServer(server, {
+        listen: { port: PORT },
+      });
     })
     .catch(error => {
       console.error(error);
     });
 
-  return createTestClient(server);
+  return server;
 };
 
 export const disconnect = async () => {

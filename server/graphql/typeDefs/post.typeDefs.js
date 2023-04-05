@@ -1,4 +1,4 @@
-import { gql } from "apollo-server";
+import gql from "graphql-tag";
 
 const typeDefs = gql`
   type Post {
@@ -8,7 +8,11 @@ const typeDefs = gql`
     content: String!
     time: String!
     likes: [String]
-    comments: [Comment]
+  }
+
+  input GetPostByPageInput {
+    page: Int!
+    lastPostId: String!
   }
 
   input CreatePostInput {
@@ -17,13 +21,13 @@ const typeDefs = gql`
   }
 
   type Query {
-    getPostByPage(page: Int!): [Post]
+    getPostByPage(getPostByPageInput: GetPostByPageInput): [Post]
   }
 
   type Mutation {
     createPost(createPostInput: CreatePostInput): Post!
-    deletePost(postID: ID!): String!
-    likePost(postID: ID!): Post!
+    deletePost(postId: ID!): String!
+    likePost(postId: ID!): String!
   }
 `;
 

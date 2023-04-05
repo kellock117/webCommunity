@@ -1,4 +1,3 @@
-import { AuthenticationError } from "apollo-server";
 import jwt from "jsonwebtoken";
 
 const auth = context => {
@@ -12,7 +11,7 @@ const auth = context => {
         const user = jwt.verify(token, process.env.SECRET_KEY);
         return user;
       } catch (error) {
-        throw new AuthenticationError("Invalid/Expired token");
+        throw new Error("Invalid/Expired token");
       }
     }
     throw new Error(`Authentication token must be Bearer [token]`);
