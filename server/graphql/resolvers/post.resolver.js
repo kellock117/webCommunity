@@ -7,7 +7,10 @@ const postResolver = {
       // use fast pagination with lastPostId from the second page
       const options = page > 1 ? { _id: { $lt: lastPostId } } : {};
 
-      const posts = await Post.find(options).limit(10).sort({ $natural: -1 });
+      const posts = await Post.find(options)
+        .limit(10)
+        .sort({ $natural: -1 })
+        .populate("comments");
 
       return posts;
     },
@@ -45,21 +48,19 @@ const postResolver = {
       const user = checkAuth(context);
       const post = await Post.findById(postId);
 
-      if (post) {
-        const checkLike = post.likes.indexOf(user.userName);
+      if (post === null) throw new Error("Post not found");
 
-        if (checkLike == -1) {
-          post.likes.push(user.userName);
-          await post.save();
-          return "liked";
-        }
-        post.likes.splice(checkLike, 1);
+      const checkLike = post.likes.indexOf(user.userName);
+
+      if (checkLike == -1) {
+        post.likes.push(user.userName);
         await post.save();
-
-        return "unliked";
-      } else {
-        throw new Error("Post not found");
+        return "liked";
       }
+      post.likes.splice(checkLike, 1);
+      await post.save();
+
+      return "unliked";
     },
   },
 };

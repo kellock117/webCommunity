@@ -1,10 +1,5 @@
 import React, { Fragment, useEffect } from "react";
 import { isMobile } from "react-device-detect";
-import LikeComment from "./likeComment.component";
-import DeleteComment from "./deleteComment.component";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import { useForm } from "../../util/hooks";
-import gql from "graphql-tag";
 
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
@@ -18,6 +13,12 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 
+import LikeComment from "./likeComment.component";
+import DeleteComment from "./deleteComment.component";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useForm } from "../../util/hooks";
+import { GQL_GET_COMMENTS, GQL_CREATE_COMMENT } from "../../constants/comment";
+
 interface CommentProps {
   id: React.Key;
   content: string;
@@ -28,7 +29,7 @@ interface CommentProps {
 
 interface Props {
   currentUser: string;
-  postID: React.Key;
+  postId: React.Key;
   expanded: boolean;
   setCommentLength: any;
 }
@@ -36,18 +37,18 @@ interface Props {
 export default function Comment(props: Props) {
   const { data: { getComments } = {} } = useQuery(GQL_GET_COMMENTS, {
     variables: {
-      postID: props.postID,
+      postId: props.postId,
     },
   });
 
   const { onChange, onSubmit, values } = useForm(createCommentCallback, {
-    postID: props.postID,
+    postId: props.postId,
     content: "",
   });
 
   const [createComment] = useMutation(GQL_CREATE_COMMENT, {
     refetchQueries: [
-      { query: GQL_GET_COMMENTS, variables: { postID: props.postID } },
+      { query: GQL_GET_COMMENTS, variables: { postId: props.postId } },
     ],
     variables: values,
   });
@@ -88,8 +89,8 @@ export default function Comment(props: Props) {
                             {comment.userName}
                           </Typography>
                           <DeleteComment
-                            postID={props.postID}
-                            commentID={comment.id}
+                            postId={props.postId}
+                            commentId={comment.id}
                             currentUser={props.currentUser}
                             userName={comment.userName}
                           />
@@ -167,27 +168,3 @@ function showTime(currentTime: Date, commentTime: Date) {
     else return "a minute ago";
   }
 }
-
-const GQL_GET_COMMENTS = gql`
-  query GetComments($postID: String!) {
-    getComments(postID: $postID) {
-      id
-      userName
-      content
-      time
-      likes
-    }
-  }
-`;
-
-const GQL_CREATE_COMMENT = gql`
-  mutation createCommentCallback($postID: String!, $content: String!) {
-    createComment(createCommentInput: { postID: $postID, content: $content }) {
-      id
-      userName
-      content
-      time
-      likes
-    }
-  }
-`;

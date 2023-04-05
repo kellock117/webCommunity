@@ -10,6 +10,7 @@ const postSchema = new mongoose.Schema({
   },
   time: { type: Date, default: Date.now },
   likes: { type: [String], default: null },
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
 });
 
 const postModel = mongoose.model("post", postSchema);

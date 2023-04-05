@@ -9,18 +9,19 @@ const typeDefs = gql`
     likes: [String]
   }
 
-  type Query {
-    getComments(postID: String!): [Comment]
-  }
-
   input CreateCommentInput {
-    postID: String!
+    postId: String!
     content: String!
   }
+
+  type Query {
+    getComments(postId: String!): [Comment]
+  }
+
   type Mutation {
     createComment(createCommentInput: CreateCommentInput): Comment!
-    deleteComment(commentID: ID!): String!
-    likeComment(commentID: ID!): Comment
+    deleteComment(commentId: ID!): String!
+    likeComment(commentId: ID!): Comment
   }
 `;
 

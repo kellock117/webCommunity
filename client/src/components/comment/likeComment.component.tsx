@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Typography } from "@mui/material";
 
+import { GQL_LIKE_COMMENT } from "../../constants/comment";
 interface props {
   id: React.Key;
   currentUser: string;
@@ -18,7 +18,7 @@ export default function Like(props: props) {
   const [pressed, setPressed] = useState(isUserLiked);
 
   const [likeComment] = useMutation(GQL_LIKE_COMMENT, {
-    variables: { commentID: props.id },
+    variables: { commentId: props.id },
   });
 
   const handleSubmission = () => {
@@ -38,11 +38,3 @@ export default function Like(props: props) {
     </IconButton>
   );
 }
-
-const GQL_LIKE_COMMENT = gql`
-  mutation LikeComment($commentID: ID!) {
-    likeComment(commentID: $commentID) {
-      likes
-    }
-  }
-`;

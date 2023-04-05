@@ -1,13 +1,13 @@
 import React from "react";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/DeleteForever";
 
+import { GQL_GET_COMMENTS, GQL_DELETE_COMMENT } from "../../constants/comment";
 interface Props {
-  postID: React.Key;
-  commentID: React.Key;
+  postId: React.Key;
+  commentId: React.Key;
   currentUser: string;
   userName: string;
 }
@@ -15,9 +15,9 @@ interface Props {
 export default function DeletePost(props: Props) {
   const [deleteComment] = useMutation(GQL_DELETE_COMMENT, {
     refetchQueries: [
-      { query: GQL_GET_COMMENTS, variables: { postID: props.postID } },
+      { query: GQL_GET_COMMENTS, variables: { postId: props.postId } },
     ],
-    variables: { commentID: props.commentID },
+    variables: { commentId: props.commentId },
   });
 
   const handleSubmission = () => {
@@ -38,21 +38,3 @@ export default function DeletePost(props: Props) {
     return <></>;
   }
 }
-
-const GQL_DELETE_COMMENT = gql`
-  mutation DeleteComment($commentID: ID!) {
-    deleteComment(commentID: $commentID)
-  }
-`;
-
-const GQL_GET_COMMENTS = gql`
-  query GetComments($postID: String!) {
-    getComments(postID: $postID) {
-      id
-      userName
-      content
-      time
-      likes
-    }
-  }
-`;

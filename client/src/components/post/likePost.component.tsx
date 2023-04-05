@@ -18,7 +18,7 @@ export default function Like(props: props) {
   const [pressed, setPressed] = useState(isUserLiked);
 
   const [likePost] = useMutation(GQL_LIKE_POST, {
-    variables: { postID: props.id },
+    variables: { postId: props.id },
   });
 
   const handleSubmission = () => {

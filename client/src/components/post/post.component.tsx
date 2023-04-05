@@ -69,7 +69,7 @@ export default function Post(post: PostProps) {
             <DeletePost
               currentUser={post.currentUser}
               userName={post.userName}
-              postID={post.id}
+              postId={post.id}
             />
           }
         ></CardHeader>
@@ -94,7 +94,7 @@ export default function Post(post: PostProps) {
         </CardActions>
         <Comment
           key={post.id}
-          postID={post.id}
+          postId={post.id}
           currentUser={post.currentUser}
           expanded={expanded}
           setCommentLength={setCommentLength}

@@ -4,8 +4,10 @@ import checkAuth from "../../util/authentication.js";
 
 const commentResolver = {
   Query: {
-    getComments: async (_, { postID }) => {
-      const comments = await Comment.find({ postID: postID });
+    getComments: async (_, { postId }) => {
+      const post = await Post.findById(postId).populate("comments");
+
+      const comments = post.comments;
 
       return comments;
     },
@@ -13,11 +15,11 @@ const commentResolver = {
   Mutation: {
     createComment: async (
       _,
-      { createCommentInput: { postID, content } },
+      { createCommentInput: { postId, content } },
       context
     ) => {
       const user = checkAuth(context);
-      const post = await Post.findById(postID);
+      const post = await Post.findById(postId);
 
       const comment = new Comment({
         content: content,
@@ -28,12 +30,13 @@ const commentResolver = {
       post.comments.push(comment);
       const res = await comment.save();
       post.save();
+
       return res;
     },
-    deleteComment: async (_, { commentID }, context) => {
+    deleteComment: async (_, { commentId }, context) => {
       const user = checkAuth(context);
       try {
-        const comment = await Comment.findById(commentID);
+        const comment = await Comment.findById(commentId);
         if (user.userName === comment.userName) {
           await comment.delete();
           return "Comment deleted successfully";
@@ -44,9 +47,9 @@ const commentResolver = {
         throw new Error(error.message);
       }
     },
-    likeComment: async (_, { commentID }, context) => {
+    likeComment: async (_, { commentId }, context) => {
       const user = checkAuth(context);
-      const comment = await Comment.findById(commentID);
+      const comment = await Comment.findById(commentId);
 
       if (comment) {
         const checkLike = comment.likes.indexOf(user.userName);

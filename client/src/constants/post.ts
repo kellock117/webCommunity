@@ -29,15 +29,13 @@ export const GQL_CREATE_POST = gql`
 `;
 
 export const GQL_LIKE_POST = gql`
-  mutation LikePost($postID: ID!) {
-    likePost(postID: $postID) {
-      likes
-    }
+  mutation LikePost($postId: ID!) {
+    likePost(postId: $postId)
   }
 `;
 
 export const GQL_DELETE_POST = gql`
-  mutation DeletePost($postID: ID!) {
-    deletePost(postID: $postID)
+  mutation DeletePost($postId: ID!) {
+    deletePost(postId: $postId)
   }
 `;
