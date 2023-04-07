@@ -32,8 +32,6 @@ export const GQL_DELETE_COMMENT = gql`
 
 export const GQL_LIKE_COMMENT = gql`
   mutation LikeComment($commentId: ID!) {
-    likeComment(commentId: $commentId) {
-      likes
-    }
+    likeComment(commentId: $commentId)
   }
 `;

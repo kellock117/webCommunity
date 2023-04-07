@@ -2,16 +2,14 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import User from "../../models/user.model.js";
-// import History from "../../models/history.js";
 
 function generateToken(user) {
   return jwt.sign(
     {
       userName: user.userName,
-      password: user.password,
     },
     process.env.SECRET_KEY,
-    { expiresIn: "1y" }
+    { expiresIn: "30m" }
   );
 }
 
@@ -41,11 +39,6 @@ const userResolver = {
         password: password,
       });
 
-      // const history = new History({
-      //   userName: userName,
-      // });
-      // await history.save();
-
       // save the user information into mongodb
       const res = await user.save();
       const token = generateToken(res);
@@ -64,6 +57,9 @@ const userResolver = {
       // compare input password to user's password
       const match = await bcrypt.compare(password, user.password);
       if (!match) throw new Error("wrong password");
+
+      user.lastLogin = new Date();
+      await user.save();
 
       const token = generateToken(user);
 

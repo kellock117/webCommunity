@@ -1,5 +1,7 @@
 import Post from "../../models/post.model.js";
 import checkAuth from "../../util/authentication.js";
+import { createNotification } from "./notification.resolver.js";
+import { LIKE } from "../../constants/notification.js";
 
 const isNull = post => {
   if (post === null) throw new Error("Post not found");
@@ -52,12 +54,19 @@ const postResolver = {
 
       if (checkLike == -1) {
         post.likes.push(user.userName);
-        await post.save();
+        post.save();
+
+        await createNotification({
+          userName: post.userName,
+          postId: postId,
+          action: LIKE,
+          context: context,
+        });
         return "liked";
       }
 
       post.likes.splice(checkLike, 1);
-      await post.save();
+      post.save();
 
       return "unliked";
     },
