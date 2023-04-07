@@ -50,13 +50,6 @@
       "last 1 safari version"
     ]
   },
-  "options": {
-    "allowedHosts": [
-      "localhost",
-      ".localhost"
-    ],
-    "proxy": "http://localhost:6974/"
-  },
   "devDependencies": {
     "typescript": "^4.8.3"
   }

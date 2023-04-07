@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({
-  content: String,
-  userName: String,
-  time: String,
+  userName: { type: String, required: true },
+  content: {
+    type: String,
+    required: true,
+    maxLength: [512, "max length: 512"],
+  },
+  time: { type: Date, default: Date.now },
   likes: { type: [String], default: null },
-  post: { type: mongoose.Schema.Types.ObjectId, ref: "post" },
+  postId: { type: mongoose.Schema.Types.ObjectId, required: true },
 });
 
 const commentModel = mongoose.model("comment", commentSchema);

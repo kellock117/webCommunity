@@ -2,15 +2,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-  
-[[redirects]]
-  from = "/login"
-  to = "https://simple-web-community-kellock117.koyeb.app/login"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/register"
-  to = "https://simple-web-community-kellock117.koyeb.app/register"
-  status = 200
-  force = true

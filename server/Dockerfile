@@ -1,13 +1,13 @@
-FROM node:16
+FROM node:16-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci --omit=dev
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 6974
 
 VOLUME [ "./.env:/app.env" ]
 

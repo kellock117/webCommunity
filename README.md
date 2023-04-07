@@ -2,7 +2,7 @@
   Simple Community
 </h1>
 <p align="center">
-  <a>A full stack social media application that allows users to communicate each other</a>
+  <a>An application that the users communicate each other</a>
   <br/>
   <a href="https://simcomm.netlify.app">https://simcomm.netlify.app</a>
   (Frontend hosted with <a href="https://www.netlify.com/" target="_blank">Netlify</a>) <br/>
@@ -20,6 +20,7 @@
 
 frontend: material-ui(design), react(framework) <br />
 backend: node.js(framework), apollo-server(graphql), mongoose(mongodb)
+unit test: jest
 
 # Funtions implemented
 
@@ -27,4 +28,4 @@ login with jwt, create post, view post, like post, post caching, create comment,
 
 # Functions to be implemented
 
-webpack, typescript for backend, notification, performance improvement of pagination, testing
+webpack, typescript for backend, notification, testing

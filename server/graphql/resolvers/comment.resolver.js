@@ -30,7 +30,7 @@ const commentResolver = {
       const comment = new Comment({
         content: content,
         userName: user.userName,
-        time: new Date().toISOString(),
+        postId: post._id,
       });
 
       post.comments.push(comment);

@@ -57,7 +57,6 @@ export default function Comment(props: Props) {
     createComment();
   }
 
-  const currentTime = new Date();
   const commentBoxSize = isMobile ? "29ch" : "49ch";
   useEffect(() => {
     if (getComments) {
@@ -106,7 +105,7 @@ export default function Comment(props: Props) {
                             {comment.content}
                           </Typography>
                           <br />
-                          {showTime(currentTime, new Date(comment.time))}
+                          {showTime(comment.time)}
                           <LikeComment
                             id={comment.id}
                             currentUser={props.currentUser}
@@ -148,7 +147,9 @@ export default function Comment(props: Props) {
   }
 }
 
-function showTime(currentTime: Date, commentTime: Date) {
+function showTime(time: String) {
+  const commentTime = new Date(Number(time));
+  const currentTime = new Date();
   let timeGap = (currentTime.getTime() - commentTime.getTime()) / (1000 * 60);
 
   if (timeGap >= 43200) {

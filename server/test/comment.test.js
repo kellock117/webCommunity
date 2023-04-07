@@ -125,7 +125,7 @@ describe("delete comment", () => {
 });
 
 describe("like comment", () => {
-  const variables = { commentId: "642d3f5ae5756e00e62ccaa7" };
+  const variables = { commentId: "642fd7159cde25e8728bd764" };
   test("hit the like button to the comment with no like with valid token", async () => {
     const {
       data: { likeComment },
