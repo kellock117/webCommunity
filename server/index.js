@@ -33,3 +33,5 @@ mongoose
   .catch(error => {
     console.error(error);
   });
+
+mongoose.set("strictQuery", true);

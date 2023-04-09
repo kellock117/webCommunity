@@ -57,11 +57,15 @@ const createCommentNotification = async ({
 const commentResolver = {
   Query: {
     getComments: async (_, { postId }) => {
-      const post = await Post.findById(postId).populate("comments");
+      try {
+        const post = await Post.findById(postId).populate("comments");
 
-      const comments = post.comments;
+        const comments = post.comments;
 
-      return comments;
+        return comments;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
   },
   Mutation: {
@@ -70,69 +74,79 @@ const commentResolver = {
       { createCommentInput: { postId, content } },
       context
     ) => {
-      const user = checkAuth(context);
+      try {
+        const user = checkAuth(context);
 
-      const post = await Post.findById(postId);
+        const post = await Post.findById(postId);
+        if (post === null) throw new Error("Post not found");
 
-      if (post === null) throw new Error("Post not found");
+        const comment = new Comment({
+          content: content,
+          userName: user.userName,
+          postId: post._id,
+        });
 
-      const comment = new Comment({
-        content: content,
-        userName: user.userName,
-        postId: post._id,
-      });
+        const res = await comment.save();
+        post.comments.push(comment);
+        post.save();
 
-      const res = await comment.save();
-      post.comments.push(comment);
-      post.save();
+        createCommentNotification({
+          post: post,
+          postId: postId,
+          context: context,
+          content: content,
+        });
 
-      createCommentNotification({
-        post: post,
-        postId: postId,
-        context: context,
-        content: content,
-      });
-
-      return res;
+        return res;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
     deleteComment: async (_, { commentId }, context) => {
-      const user = checkAuth(context);
+      try {
+        const user = checkAuth(context);
 
-      const comment = await Comment.findById(commentId);
-      isNull(comment);
+        const comment = await Comment.findById(commentId);
+        isNull(comment);
 
-      if (user.userName !== comment?.userName)
-        throw new Error("Action not allowed");
+        if (user.userName !== comment.userName)
+          throw new Error("Action not allowed");
 
-      await comment.delete();
+        comment.deleteOne({ _id: commentId });
 
-      return "Comment deleted successfully";
+        return "Comment deleted successfully";
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
     likeComment: async (_, { commentId }, context) => {
-      const user = checkAuth(context);
-      const comment = await Comment.findById(commentId);
+      try {
+        const user = checkAuth(context);
+        const comment = await Comment.findById(commentId);
+        isNull(comment);
 
-      isNull(comment);
+        const checkLike = comment.likes.indexOf(user.userName);
 
-      const checkLike = comment.likes.indexOf(user.userName);
+        if (checkLike === -1) {
+          comment.likes.push(user.userName);
+          await comment.save();
 
-      if (checkLike == -1) {
-        comment.likes.push(user.userName);
+          createNotification({
+            userName: comment.userName,
+            postId: comment.postId,
+            action: LIKE,
+            context: context,
+          });
+          return "liked";
+        }
+
+        comment.likes.splice(checkLike, 1);
         await comment.save();
 
-        await createNotification({
-          userName: comment.userName,
-          postId: comment.postId,
-          action: LIKE,
-          context: context,
-        });
-        return "liked";
+        return "unliked";
+      } catch (error) {
+        throw new Error(error.message);
       }
-
-      comment.likes.splice(checkLike, 1);
-      await comment.save();
-
-      return "unliked";
     },
   },
 };

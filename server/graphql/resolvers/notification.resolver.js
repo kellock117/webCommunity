@@ -7,25 +7,55 @@ import checkAuth from "../../util/authentication.js";
 const notificationResolver = {
   Query: {
     getNotifications: async (_, {}, context) => {
-      const user = checkAuth(context);
-      const data = await User.findOne({ userName: user.userName }).populate(
-        "notifications"
-      );
+      try {
+        const user = checkAuth(context);
+        const data = await User.findOne({ userName: user.userName }).populate(
+          "notifications"
+        );
 
-      const notifications = data.notifications;
+        const notifications = data.notifications;
 
-      return notifications;
+        return notifications;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
   },
   Mutation: {
     markAsRead: async (_, { notificationId }, context) => {
-      checkAuth(context);
+      try {
+        checkAuth(context);
 
-      const notification = await Notification.findById(notificationId);
-      notification.isRead = true;
-      notification.save();
+        const notification = await Notification.findById(notificationId);
+        notification.isRead = true;
+        notification.save();
 
-      return "marked";
+        return "marked";
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    deleteNotifications: async (_, {}, context) => {
+      if (process.env.NODE_ENV !== "test")
+        throw new Error("This is only for test environment");
+
+      try {
+        const userName = checkAuth(context).userName;
+        const user = await User.findOne({ userName: userName });
+
+        const notifications = user.notifications;
+        user.notifications = [];
+        user.save();
+
+        for (const notification of notifications) {
+          const id = notification.toString();
+          await Notification.deleteOne({ _id: id });
+        }
+
+        return "Notifications deleted successfully";
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
   },
 };
@@ -51,9 +81,10 @@ export const createNotification = async ({
 
   await notification.save();
   const user = await User.findOne({ userName: userName });
+  if (user === null) return "User not found";
 
   user.notifications.push(notification);
-  user.save();
+  await user.save();
 
   return "Notification created";
 };

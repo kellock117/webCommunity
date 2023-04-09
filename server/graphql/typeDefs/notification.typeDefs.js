@@ -16,6 +16,7 @@ const typeDefs = gql`
 
   type Mutation {
     markAsRead(notificationId: String!): String!
+    deleteNotifications: String!
   }
 `;
 

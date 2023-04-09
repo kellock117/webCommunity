@@ -21,3 +21,9 @@ export const GQL_MARK_AS_READ = gql`
     markAsRead(notificationId: $notificationId)
   }
 `;
+
+export const GQL_DELETE_NOTIFICATIONS = gql`
+  mutation DeleteNotifications {
+    deleteNotifications
+  }
+`;

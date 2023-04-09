@@ -1,23 +1,18 @@
-import dotenv from "dotenv";
-
-import typeDefs from "../graphql/typeDefs/post.typeDefs";
-import resolvers from "../graphql/resolvers/post.resolver";
 import {
   GQL_GET_POST_BY_PAGE,
   GQL_CREATE_POST,
   GQL_LIKE_POST,
   GQL_DELETE_POST,
 } from "../constants/post";
-import { init, close, validContextValue, run } from "./util";
-
-dotenv.config();
+import {
+  init,
+  run,
+  anotherValidContextValue,
+  invalidContextValue,
+} from "./util";
 
 beforeAll(async () => {
-  await init({ typeDefs: typeDefs, resolvers: resolvers, port: 5002 });
-});
-
-afterAll(async () => {
-  await close();
+  await init({ port: 5002 });
 });
 
 describe("get posts by page", () => {
@@ -25,6 +20,7 @@ describe("get posts by page", () => {
     page: 1,
     lastPostId: "",
   };
+  const lastPostId = "6339b57d48880dd39e362427";
 
   test("load first page", async () => {
     const {
@@ -72,7 +68,7 @@ describe("get posts by page", () => {
   });
 
   test("load next page of last page", async () => {
-    variables.lastPostId = "632d8818c8e7981ccbff55d6";
+    variables.lastPostId = lastPostId;
     const {
       data: { getPostByPage },
     } = await run({
@@ -121,7 +117,7 @@ describe("create post", () => {
     } = await run({
       query: GQL_CREATE_POST,
       variables: variables,
-      contextValue: validContextValue(false),
+      contextValue: invalidContextValue,
     });
 
     expect.assertions(1);
@@ -130,13 +126,17 @@ describe("create post", () => {
 });
 
 describe("delete post", () => {
+  // fdsafdsa's post, fdsafdsa
+  const postOfOther = { postId: "6339b57d48880dd39e362427" };
+  const inexistentPost = { postId: "642c4dfa1aae59b7fed5b01c" };
+
   test("delete post with invalid token", async () => {
     const {
       errors: [{ message }],
     } = await run({
       query: GQL_DELETE_POST,
-      variables: { postId: "642c4dfa1aae59b7fed5b01c" },
-      contextValue: validContextValue(false),
+      variables: postOfOther,
+      contextValue: invalidContextValue,
     });
 
     expect.assertions(1);
@@ -148,7 +148,7 @@ describe("delete post", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_DELETE_POST,
-      variables: { postId: "642c4dfa1aae59b7fed5b01c" },
+      variables: inexistentPost,
     });
 
     expect.assertions(1);
@@ -160,7 +160,7 @@ describe("delete post", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_DELETE_POST,
-      variables: { postId: "641c70d6b65603488d98af79" },
+      variables: postOfOther,
     });
 
     expect.assertions(1);
@@ -169,13 +169,15 @@ describe("delete post", () => {
 });
 
 describe("like post", () => {
-  const variables = { postId: "633ca749895ebd01a4604b04" };
+  const coming = { postId: "633d523919335e2b3cc23341" };
+  const inexistentPost = { postId: "642c4dfa1aae59b7fed5b01c" };
+
   test("hit the like button to the post with no like with valid token", async () => {
     const {
       data: { likePost },
     } = await run({
       query: GQL_LIKE_POST,
-      variables: variables,
+      variables: coming,
     });
 
     expect.assertions(1);
@@ -187,7 +189,7 @@ describe("like post", () => {
       data: { likePost },
     } = await run({
       query: GQL_LIKE_POST,
-      variables: variables,
+      variables: coming,
     });
 
     expect.assertions(1);
@@ -199,7 +201,7 @@ describe("like post", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_LIKE_POST,
-      variables: { postId: "632d8818c8e7981ccbff55d5" },
+      variables: inexistentPost,
     });
 
     expect.assertions(1);
@@ -211,8 +213,8 @@ describe("like post", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_LIKE_POST,
-      variables: variables,
-      contextValue: validContextValue(false),
+      variables: inexistentPost,
+      contextValue: invalidContextValue,
     });
 
     expect.assertions(1);

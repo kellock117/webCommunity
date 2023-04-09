@@ -10,65 +10,84 @@ const isNull = post => {
 const postResolver = {
   Query: {
     getPostByPage: async (_, { getPostByPageInput: { page, lastPostId } }) => {
-      // use fast pagination with lastPostId from the second page
-      const options = page > 1 ? { _id: { $lt: lastPostId } } : {};
+      try {
+        // use fast pagination with lastPostId from the second page
+        const options = page > 1 ? { _id: { $lt: lastPostId } } : {};
 
-      const posts = await Post.find(options).limit(10).sort({ $natural: -1 });
+        const posts = await Post.find(options).limit(10).sort({ $natural: -1 });
 
-      return posts;
+        return posts;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
   },
   Mutation: {
     createPost: async (_, { createPostInput: { title, content } }, context) => {
-      // check validation
-      const user = checkAuth(context);
+      try {
+        // check validation
+        const user = checkAuth(context);
 
-      const post = new Post({
-        title: title,
-        userName: user.userName,
-        content: content,
-      });
+        const post = new Post({
+          title: title,
+          userName: user.userName,
+          content: content,
+        });
 
-      const res = await post.save();
-      return res;
+        const res = await post.save();
+        return res;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
     deletePost: async (_, { postId }, context) => {
-      const user = checkAuth(context);
+      try {
+        const user = checkAuth(context);
 
-      const post = await Post.findById(postId);
-      isNull(post);
+        const post = await Post.findById(postId);
+        isNull(post);
 
-      if (user.userName !== post?.userName)
-        throw new Error("Action not allowed");
+        if (user.userName !== post.userName)
+          throw new Error("Action not allowed");
 
-      await post.delete();
-      return "Post deleted successfully";
+        post.deleteOne({ _id: postId });
+
+        return "Post deleted successfully";
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
     likePost: async (_, { postId }, context) => {
-      const user = checkAuth(context);
+      try {
+        const user = checkAuth(context);
 
-      const post = await Post.findById(postId);
-      isNull(post);
+        const post = await Post.findById(postId);
+        isNull(post);
 
-      const checkLike = post.likes.indexOf(user.userName);
+        // find the index of the user name
+        const checkLike = post.likes.indexOf(user.userName);
 
-      if (checkLike == -1) {
-        post.likes.push(user.userName);
+        // index -1 means no like
+        if (checkLike === -1) {
+          post.likes.push(user.userName);
+          await post.save();
+
+          createNotification({
+            userName: post.userName,
+            postId: postId,
+            action: LIKE,
+            context: context,
+          });
+          return "liked";
+        }
+
+        post.likes.splice(checkLike, 1);
         post.save();
 
-        await createNotification({
-          userName: post.userName,
-          postId: postId,
-          action: LIKE,
-          context: context,
-        });
-        return "liked";
+        return "unliked";
+      } catch (error) {
+        throw new Error(error.message);
       }
-
-      post.likes.splice(checkLike, 1);
-      post.save();
-
-      return "unliked";
     },
   },
 };
