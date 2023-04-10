@@ -102,7 +102,7 @@ const commentResolver = {
         throw new Error(error.message);
       }
     },
-    deleteComment: async (_, { commentId }, context) => {
+    deleteComment: async (_, { postId, commentId }, context) => {
       try {
         const user = checkAuth(context);
 
@@ -112,6 +112,12 @@ const commentResolver = {
         if (user.userName !== comment.userName)
           throw new Error("Action not allowed");
 
+        const post = await Post.findById(postId);
+        if (post === null) throw new Error("Post not found");
+
+        const index = post.comments.indexOf(commentId);
+        post.comments.splice(index, 1);
+        post.save();
         comment.deleteOne({ _id: commentId });
 
         return "Comment deleted successfully";

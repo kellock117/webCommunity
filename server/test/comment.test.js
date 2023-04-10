@@ -4,12 +4,8 @@ import {
   GQL_LIKE_COMMENT,
   GQL_DELETE_COMMENT,
 } from "../constants/comment";
-import {
-  init,
-  run,
-  invalidContextValue,
-  anotherValidContextValue,
-} from "./util";
+import { GQL_GET_POST } from "../constants/post";
+import { init, run, invalidContextValue } from "./util";
 
 beforeAll(async () => {
   await init({ port: 5003 });
@@ -46,18 +42,43 @@ describe("create comment", () => {
       variables: commentOnComing,
     });
 
-    expect.assertions(2);
+    expect.assertions(3);
     expect(createComment.content).toBe(commentOnComing.content);
+
+    let {
+      data: {
+        getPost: { comments },
+      },
+    } = await run({
+      query: GQL_GET_POST,
+      variables: { postId: commentOnComing.postId },
+    });
+    const commentsLength = comments.length;
 
     // delete the comment
     const {
       data: { deleteComment },
     } = await run({
       query: GQL_DELETE_COMMENT,
-      variables: { commentId: createComment.id },
+      variables: {
+        postId: commentOnComing.postId,
+        commentId: createComment.id,
+      },
     });
 
+    ({
+      data: [
+        {
+          getPost: { comments },
+        },
+      ],
+    } = await run({
+      query: GQL_GET_POST,
+      variables: { postId: commentOnComing.postId },
+    }));
+
     expect(deleteComment).toBe("Comment deleted successfully");
+    expect(commentsLength).toBe(comments.length);
   });
 
   test("create comment with invalid context", async () => {
@@ -88,8 +109,14 @@ describe("create comment", () => {
 
 describe("delete comment", () => {
   // Aaa's comment, Hello
-  const commentOfOther = { commentId: "633d412c8a43702b3dc71fb6" };
-  const inexistentComment = { commentId: "63c80d8b84d40f2fceaa3209" };
+  const commentOfOther = {
+    postId: "633d41248a43702b3dc71fb2",
+    commentId: "633d412c8a43702b3dc71fb6",
+  };
+  const inexistentComment = {
+    postId: "633d41248a43702b3dc71fb2",
+    commentId: "63c80d8b84d40f2fceaa3209",
+  };
 
   test("delete comment with invalid token", async () => {
     const {
@@ -130,7 +157,7 @@ describe("delete comment", () => {
 });
 
 describe("like comment", () => {
-  const thanks = { commentId: "642d3f5ae5756e00e62ccaa7" };
+  const thanks = { commentId: "643389e51c51ad6ac3446365" };
   const inexistentComment = { commentId: "642d3f5ae5756e00e62ccaa8" };
 
   test("hit the like button to the comment with no like with valid token", async () => {

@@ -1,5 +1,19 @@
 import gql from "graphql-tag";
 
+export const GQL_GET_POST = gql`
+  query GetPost($postId: String!) {
+    getPost(postId: $postId) {
+      id
+      title
+      userName
+      content
+      time
+      likes
+      comments
+    }
+  }
+`;
+
 export const GQL_GET_POST_BY_PAGE = gql`
   query GetPostByPage($page: Int!, $lastPostId: String!) {
     getPostByPage(
@@ -11,6 +25,7 @@ export const GQL_GET_POST_BY_PAGE = gql`
       content
       time
       likes
+      comments
     }
   }
 `;
@@ -23,6 +38,8 @@ export const GQL_CREATE_POST = gql`
       userName
       content
       time
+      likes
+      comments
     }
   }
 `;

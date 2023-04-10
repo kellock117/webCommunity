@@ -28,7 +28,7 @@ describe("get notifications", () => {
       data: { deleteComment },
     } = await run({
       query: GQL_DELETE_COMMENT,
-      variables: { commentId: createComment.id },
+      variables: { postId: commentInput.postId, commentId: createComment.id },
     });
 
     expect(deleteComment).toBe("Comment deleted successfully");

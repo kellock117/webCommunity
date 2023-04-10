@@ -11,12 +11,13 @@ export const GQL_GET_POST_BY_PAGE = gql`
       content
       time
       likes
+      comments
     }
   }
 `;
 
 export const GQL_CREATE_POST = gql`
-  mutation createPostCallback($title: String!, $content: String!) {
+  mutation CreatePost($title: String!, $content: String!) {
     createPost(createPostInput: { title: $title, content: $content }) {
       id
       title
@@ -24,6 +25,7 @@ export const GQL_CREATE_POST = gql`
       content
       time
       likes
+      comments
     }
   }
 `;

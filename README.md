@@ -19,7 +19,7 @@
 # Dependencies
 
 frontend: material-ui(design), react(framework) <br />
-backend: node.js(framework), apollo-server(graphql), mongoose(mongodb)
+backend: node.js(framework), apollo-server(graphql), mongoose(mongodb) <br />
 unit test: jest
 
 # Funtions implemented

@@ -9,6 +9,15 @@ const isNull = post => {
 
 const postResolver = {
   Query: {
+    getPost: async (_, { postId }) => {
+      try {
+        const post = await Post.findById(postId);
+
+        return post;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
     getPostByPage: async (_, { getPostByPageInput: { page, lastPostId } }) => {
       try {
         // use fast pagination with lastPostId from the second page

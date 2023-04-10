@@ -8,6 +8,7 @@ const typeDefs = gql`
     content: String!
     time: String!
     likes: [String]
+    comments: [ID]!
   }
 
   input GetPostByPageInput {
@@ -21,6 +22,7 @@ const typeDefs = gql`
   }
 
   type Query {
+    getPost(postId: String!): [Post]!
     getPostByPage(getPostByPageInput: GetPostByPageInput): [Post]
   }
 

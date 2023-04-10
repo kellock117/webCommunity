@@ -1,23 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
+
+import { GQL_DELETE_COMMENT } from "../../constants/comment";
+import { DeleteCommentProps } from "../../interface/comment.interface";
 
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/DeleteForever";
 
-import { GQL_GET_COMMENTS, GQL_DELETE_COMMENT } from "../../constants/comment";
-interface Props {
-  postId: React.Key;
-  commentId: React.Key;
-  currentUser: string;
-  userName: string;
-}
-
-export default function DeletePost(props: Props) {
-  const [deleteComment] = useMutation(GQL_DELETE_COMMENT, {
-    refetchQueries: [
-      { query: GQL_GET_COMMENTS, variables: { postId: props.postId } },
-    ],
-    variables: { commentId: props.commentId },
+const DeleteComment = ({
+  postId,
+  commentId,
+  comments,
+  setComments,
+  currentUser,
+  userName,
+}: DeleteCommentProps) => {
+  const [deleteComment, { data }] = useMutation(GQL_DELETE_COMMENT, {
+    variables: { postId: postId, commentId: commentId },
   });
 
   const handleSubmission = () => {
@@ -25,7 +24,18 @@ export default function DeletePost(props: Props) {
       deleteComment();
   };
 
-  if (props.currentUser === props.userName) {
+  useEffect(() => {
+    if (data?.deleteComment === "Comment deleted successfully") {
+      const index = comments.map(comment => comment?.id).indexOf(commentId);
+
+      const newComments = [...comments];
+      newComments.splice(index, 1);
+
+      setComments(newComments);
+    }
+  }, [data, comments, commentId, setComments]);
+
+  if (currentUser === userName) {
     return (
       <IconButton
         onClick={handleSubmission}
@@ -37,4 +47,6 @@ export default function DeletePost(props: Props) {
   } else {
     return <></>;
   }
-}
+};
+
+export default DeleteComment;
