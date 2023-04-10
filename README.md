@@ -18,7 +18,7 @@
 
 # Dependencies
 
-frontend: material-ui(design), react(framework) <br />
+frontend: material-ui(design), react(framework), react-client(state management) <br />
 backend: node.js(framework), apollo-server(graphql), mongoose(mongodb) <br />
 unit test: jest
 
@@ -28,4 +28,4 @@ login with jwt, create post, view post, like post, post caching, create comment,
 
 # Functions to be implemented
 
-webpack, typescript for backend, notification, testing
+webpack, notification, frontend testing, mention
