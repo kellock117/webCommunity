@@ -1,32 +1,23 @@
-import dotenv from "dotenv";
-
-import typeDefs from "../graphql/typeDefs/comment.typeDefs";
-import resolvers from "../graphql/resolvers/comment.resolver";
 import {
   GQL_GET_COMMENTS,
   GQL_CREATE_COMMENT,
   GQL_LIKE_COMMENT,
   GQL_DELETE_COMMENT,
 } from "../constants/comment";
-import { init, close, validContextValue, run } from "./util";
-
-dotenv.config();
+import { GQL_GET_POST } from "../constants/post";
+import { init, run, invalidContextValue } from "./util";
 
 beforeAll(async () => {
-  await init({ typeDefs: typeDefs, resolvers: resolvers, port: 5003 });
-});
-
-afterAll(async () => {
-  await close();
+  await init({ port: 5003 });
 });
 
 describe("get comments", () => {
-  const variables = { postId: "63c80b22cd40e7712759981a" };
+  const durianboi = { postId: "633ca749895ebd01a4604b04" };
 
   test("get comments", async () => {
     const {
       data: { getComments },
-    } = await run({ query: GQL_GET_COMMENTS, variables: variables });
+    } = await run({ query: GQL_GET_COMMENTS, variables: durianboi });
 
     expect.assertions(1);
     expect(getComments.length).toBeGreaterThanOrEqual(1);
@@ -34,28 +25,60 @@ describe("get comments", () => {
 });
 
 describe("create comment", () => {
-  const variables = { postId: "63c80b22cd40e7712759981a", content: "포항항" };
+  const commentOnComing = {
+    postId: "633d523919335e2b3cc23341",
+    content: "포항항",
+  };
+  const commentOnInexistentPost = {
+    postId: "63c80b22cd40e771275998aa",
+    content: "포항항",
+  };
 
   test("create comment on the post with valid context", async () => {
     const {
       data: { createComment },
     } = await run({
       query: GQL_CREATE_COMMENT,
-      variables: variables,
+      variables: commentOnComing,
     });
 
-    expect.assertions(2);
-    expect(createComment.content).toBe(variables.content);
+    expect.assertions(3);
+    expect(createComment.content).toBe(commentOnComing.content);
+
+    let {
+      data: {
+        getPost: { comments },
+      },
+    } = await run({
+      query: GQL_GET_POST,
+      variables: { postId: commentOnComing.postId },
+    });
+    const commentsLength = comments.length;
 
     // delete the comment
     const {
       data: { deleteComment },
     } = await run({
       query: GQL_DELETE_COMMENT,
-      variables: { commentId: createComment.id },
+      variables: {
+        postId: commentOnComing.postId,
+        commentId: createComment.id,
+      },
     });
 
+    ({
+      data: [
+        {
+          getPost: { comments },
+        },
+      ],
+    } = await run({
+      query: GQL_GET_POST,
+      variables: { postId: commentOnComing.postId },
+    }));
+
     expect(deleteComment).toBe("Comment deleted successfully");
+    expect(commentsLength).toBe(comments.length);
   });
 
   test("create comment with invalid context", async () => {
@@ -63,8 +86,8 @@ describe("create comment", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_CREATE_COMMENT,
-      variables: variables,
-      contextValue: validContextValue(false),
+      variables: commentOnComing,
+      contextValue: invalidContextValue,
     });
 
     expect.assertions(1);
@@ -76,7 +99,7 @@ describe("create comment", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_CREATE_COMMENT,
-      variables: { postId: "63c80b22cd40e771275998aa", content: "포항항" },
+      variables: commentOnInexistentPost,
     });
 
     expect.assertions(1);
@@ -85,14 +108,23 @@ describe("create comment", () => {
 });
 
 describe("delete comment", () => {
-  const variables = { commentId: "63c80d8b84d40f2fceaa3209" };
+  // Aaa's comment, Hello
+  const commentOfOther = {
+    postId: "633d41248a43702b3dc71fb2",
+    commentId: "633d412c8a43702b3dc71fb6",
+  };
+  const inexistentComment = {
+    postId: "633d41248a43702b3dc71fb2",
+    commentId: "63c80d8b84d40f2fceaa3209",
+  };
+
   test("delete comment with invalid token", async () => {
     const {
       errors: [{ message }],
     } = await run({
       query: GQL_DELETE_COMMENT,
-      variables: variables,
-      contextValue: validContextValue(false),
+      variables: commentOfOther,
+      contextValue: invalidContextValue,
     });
 
     expect.assertions(1);
@@ -104,7 +136,7 @@ describe("delete comment", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_DELETE_COMMENT,
-      variables: { commentId: "642c4dfa1aae59b7fed5b01d" },
+      variables: inexistentComment,
     });
 
     expect.assertions(1);
@@ -116,7 +148,7 @@ describe("delete comment", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_DELETE_COMMENT,
-      variables: variables,
+      variables: commentOfOther,
     });
 
     expect.assertions(1);
@@ -125,13 +157,15 @@ describe("delete comment", () => {
 });
 
 describe("like comment", () => {
-  const variables = { commentId: "642fd7159cde25e8728bd764" };
+  const thanks = { commentId: "643389e51c51ad6ac3446365" };
+  const inexistentComment = { commentId: "642d3f5ae5756e00e62ccaa8" };
+
   test("hit the like button to the comment with no like with valid token", async () => {
     const {
       data: { likeComment },
     } = await run({
       query: GQL_LIKE_COMMENT,
-      variables: variables,
+      variables: thanks,
     });
 
     expect.assertions(1);
@@ -143,7 +177,7 @@ describe("like comment", () => {
       data: { likeComment },
     } = await run({
       query: GQL_LIKE_COMMENT,
-      variables: variables,
+      variables: thanks,
     });
 
     expect.assertions(1);
@@ -155,7 +189,7 @@ describe("like comment", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_LIKE_COMMENT,
-      variables: { commentId: "642d3f5ae5756e00e62ccaa8" },
+      variables: inexistentComment,
     });
 
     expect.assertions(1);
@@ -167,8 +201,8 @@ describe("like comment", () => {
       errors: [{ message }],
     } = await run({
       query: GQL_LIKE_COMMENT,
-      variables: variables,
-      contextValue: validContextValue(false),
+      variables: inexistentComment,
+      contextValue: invalidContextValue,
     });
 
     expect.assertions(1);

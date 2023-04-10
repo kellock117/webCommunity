@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 
+import { GQL_LIKE_COMMENT } from "../../constants/comment";
+import { LikeCommentProps } from "../../interface/comment.interface";
+
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Typography } from "@mui/material";
 
-import { GQL_LIKE_COMMENT } from "../../constants/comment";
-interface props {
-  id: React.Key;
-  currentUser: string;
-  likes: string[];
-}
-
-export default function Like(props: props) {
+const LikeComment = (props: LikeCommentProps) => {
   const isUserLiked = props.likes.includes(props.currentUser);
   let likeCount = isUserLiked ? props.likes.length - 1 : props.likes.length;
   const [pressed, setPressed] = useState(isUserLiked);
@@ -37,4 +33,6 @@ export default function Like(props: props) {
       <Typography sx={{ fontSize: "15px" }}>{likeCount}</Typography>
     </IconButton>
   );
-}
+};
+
+export default LikeComment;

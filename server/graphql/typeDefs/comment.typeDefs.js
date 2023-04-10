@@ -20,7 +20,7 @@ const typeDefs = gql`
 
   type Mutation {
     createComment(createCommentInput: CreateCommentInput): Comment!
-    deleteComment(commentId: ID!): String!
+    deleteComment(postId: ID!, commentId: ID!): String!
     likeComment(commentId: ID!): String!
   }
 `;

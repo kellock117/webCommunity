@@ -1,24 +1,19 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 
+import { GQL_LIKE_POST } from "../../constants/post";
+import { LikePostProps } from "../../interface/post.interface";
+
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-import { GQL_LIKE_POST } from "../../constants/post";
-
-interface props {
-  id: React.Key;
-  currentUser: string;
-  likes: string[];
-}
-
-export default function Like(props: props) {
-  const isUserLiked = props.likes.includes(props.currentUser);
-  let likeCount = isUserLiked ? props.likes.length - 1 : props.likes.length;
+const Like = (post: LikePostProps) => {
+  const isUserLiked = post.likes.includes(post.currentUser);
+  let likeCount = isUserLiked ? post.likes.length - 1 : post.likes.length;
   const [pressed, setPressed] = useState(isUserLiked);
 
   const [likePost] = useMutation(GQL_LIKE_POST, {
-    variables: { postId: props.id },
+    variables: { postId: post.id },
   });
 
   const handleSubmission = () => {
@@ -37,4 +32,6 @@ export default function Like(props: props) {
       {likeCount}
     </IconButton>
   );
-}
+};
+
+export default Like;

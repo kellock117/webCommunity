@@ -22,7 +22,7 @@ const AuthContext = createContext({
   logout: () => {},
 });
 
-function authReducer(state, action) {
+const authReducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
       return {
@@ -36,9 +36,9 @@ function authReducer(state, action) {
     default:
       return state;
   }
-}
+};
 
-function AuthProvider(props) {
+const AuthProvider = props => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   const login = userData => {
@@ -49,10 +49,10 @@ function AuthProvider(props) {
     });
   };
 
-  function logout() {
+  const logout = () => {
     localStorage.removeItem(process.env.REACT_APP_KEY);
     dispatch({ type: "LOGOUT" });
-  }
+  };
 
   return (
     <AuthContext.Provider
@@ -60,6 +60,6 @@ function AuthProvider(props) {
       {...props}
     />
   );
-}
+};
 
 export { AuthContext, AuthProvider };

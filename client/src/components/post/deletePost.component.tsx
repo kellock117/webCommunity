@@ -1,20 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
+
+import { DeletePostProps } from "../../interface/post.interface";
+import { GQL_DELETE_POST } from "../../constants/post";
+import { postsValue } from "../../context/postContext";
 
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/DeleteForever";
 
-import { GQL_DELETE_POST } from "../../constants/post";
-interface Props {
-  postId: React.Key;
-  currentUser: string;
-  userName: string;
-}
-
-export default function DeletePost(props: Props) {
-  const [deletePost] = useMutation(GQL_DELETE_POST, {
-    // refetchQueries: [{ query: GQL_GET_ALL_POSTS }],
-    variables: { postId: props.postId },
+const DeletePost = (post: DeletePostProps) => {
+  const [deletePost, { data }] = useMutation(GQL_DELETE_POST, {
+    variables: { postId: post.postId },
   });
 
   const handleSubmission = () => {
@@ -22,7 +18,21 @@ export default function DeletePost(props: Props) {
       deletePost();
   };
 
-  if (props.currentUser === props.userName) {
+  useEffect(() => {
+    if (data?.deletePost === "Post deleted successfully") {
+      const index = postsValue()
+        .map(post => post?.id)
+        .indexOf(post?.postId);
+
+      // deep copy the posts value
+      const posts = [...postsValue()];
+      posts?.splice(index, 1);
+
+      postsValue(posts);
+    }
+  }, [data, post]);
+
+  if (post.currentUser === post.userName) {
     return (
       <IconButton onClick={handleSubmission}>
         <DeleteIcon />
@@ -31,4 +41,5 @@ export default function DeletePost(props: Props) {
   } else {
     return <></>;
   }
-}
+};
+export default DeletePost;

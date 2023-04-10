@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
+
+import { useForm } from "../../util/hooks";
+import { GQL_CREATE_POST } from "../../constants/post";
+import { postsValue } from "../../context/postContext";
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -8,32 +12,38 @@ import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-import { useForm } from "../../util/hooks";
-import { GQL_GET_POST_BY_PAGE, GQL_CREATE_POST } from "../../constants/post";
 
 const theme = createTheme();
 
-export default function NewPost() {
+const NewPost = () => {
   const { onChange, onSubmit, values } = useForm(createPostCallBack, {
     title: "",
     content: "",
   });
 
-  const [createPost] = useMutation(GQL_CREATE_POST, {
-    update(cache, { data }) {
-      let existingData = cache.readQuery({
-        query: GQL_GET_POST_BY_PAGE,
-        variables: { page: 1 },
-      });
-      console.log(existingData);
-    },
+  const [createPost, { data, loading, error }] = useMutation(GQL_CREATE_POST, {
     variables: values,
   });
 
   function createPostCallBack() {
     createPost();
+  }
+
+  useEffect(() => {
+    if (!loading) {
+      postsValue([data?.createPost, ...postsValue()]);
+    }
+  }, [data, loading]);
+
+  if (loading) {
+    return <CircularProgress style={{ marginLeft: "40%" }} />;
+  }
+
+  if (error) {
+    return <Alert severity="error">{error.message}</Alert>;
   }
 
   return (
@@ -82,4 +92,6 @@ export default function NewPost() {
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default NewPost;
