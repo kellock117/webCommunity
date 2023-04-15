@@ -1,17 +1,17 @@
-export interface PostProps {
-  currentUser: string;
+export interface CommentListProps {
   postId: React.Key;
-  comments: CommentProps[];
-  setComments: React.Dispatch<React.SetStateAction<CommentProps[]>>;
   expanded: boolean;
 }
 
 export interface CommentProps {
   id: React.Key;
+  postId: React.Key;
   content: string;
   userName: string;
   time: string;
   likes: string[];
+  comments: CommentProps[];
+  setComments: React.Dispatch<React.SetStateAction<CommentProps[]>>;
 }
 
 export interface NewCommentProps {
@@ -20,16 +20,14 @@ export interface NewCommentProps {
 }
 
 export interface LikeCommentProps {
-  id: React.Key;
-  currentUser: string;
+  commentId: React.Key;
   likes: string[];
 }
 
 export interface DeleteCommentProps {
+  commentId: React.Key;
   postId: React.Key;
   comments: CommentProps[];
-  commentId: React.Key;
   setComments: React.Dispatch<React.SetStateAction<CommentProps[]>>;
-  currentUser: string;
   userName: string;
 }

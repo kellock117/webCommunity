@@ -1,12 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useQuery } from "@apollo/react-hooks";
 
 import { postsValue } from "../context/postContext";
-
+import { errorValue } from "../context/errorContext";
 import NavBar from "../components/others/navbar.component";
 import NewPost from "../components/post/newPost.component";
 import PostList from "../components/post/postList.component";
+import Error from "../components/others/error.component";
 import { GQL_GET_POST_BY_PAGE } from "../constants/post";
+
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Main() {
   const [page, setPage] = useState<number>(1);
@@ -26,22 +29,26 @@ export default function Main() {
     setPage(page - 1);
   };
 
-  useEffect(() => {
-    postsValue(data?.getPostByPage);
-  }, [data]);
+  if (loading) {
+    return <CircularProgress style={{ marginLeft: "50%" }} />;
+  }
+
+  if (error) errorValue(error);
+
+  const { getPostByPage } = data;
+  postsValue(getPostByPage);
 
   return (
-    <div>
+    <React.Fragment>
       <NavBar />
       {page === 1 ? <NewPost /> : null}
       <PostList
-        loading={loading}
-        error={error}
         page={page}
         lastPostId={lastPostId}
         nextPage={nextPage}
         previousPage={previousPage}
       />
-    </div>
+      <Error />
+    </React.Fragment>
   );
 }

@@ -3,7 +3,7 @@ import User from "../../models/user.model.js";
 import Comment from "../../models/comment.model.js";
 import checkAuth from "../../util/authentication.js";
 import { createNotification } from "./notification.resolver.js";
-import { LIKE, COMMENT } from "../../constants/notification.js";
+import { LIKECOMMENT, COMMENT, MENTION } from "../../constants/notification.js";
 
 const isNull = comment => {
   if (comment === null) throw new Error("Comment not found");
@@ -38,7 +38,7 @@ const createCommentNotification = async ({
     createNotification({
       userName: mention,
       postId: postId,
-      action: COMMENT,
+      action: MENTION,
       context: context,
     });
   }
@@ -140,7 +140,7 @@ const commentResolver = {
           createNotification({
             userName: comment.userName,
             postId: comment.postId,
-            action: LIKE,
+            action: LIKECOMMENT,
             context: context,
           });
           return "liked";

@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 
+import { AuthContext } from "../../context/authContext";
 import { GQL_LIKE_POST } from "../../constants/post";
 import { LikePostProps } from "../../interface/post.interface";
 
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-const Like = (post: LikePostProps) => {
-  const isUserLiked = post.likes.includes(post.currentUser);
-  let likeCount = isUserLiked ? post.likes.length - 1 : post.likes.length;
+const Like = ({ postId, likes }: LikePostProps) => {
+  const { user } = useContext(AuthContext);
+
+  const isUserLiked = likes.includes(user.userName);
+  let likeCount = isUserLiked ? likes.length - 1 : likes.length;
   const [pressed, setPressed] = useState(isUserLiked);
 
   const [likePost] = useMutation(GQL_LIKE_POST, {
-    variables: { postId: post.id },
+    variables: { postId: postId },
   });
 
   const handleSubmission = () => {

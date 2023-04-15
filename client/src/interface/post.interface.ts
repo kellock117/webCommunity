@@ -1,6 +1,4 @@
 export interface PostsProps {
-  loading: boolean;
-  error: any;
   page: number;
   lastPostId: any;
   nextPage: any;
@@ -8,9 +6,8 @@ export interface PostsProps {
 }
 
 export interface PostProps {
-  currentUser: string;
-  userName: string;
   id: React.Key;
+  userName: string;
   title: string;
   time: string;
   content: string;
@@ -20,12 +17,10 @@ export interface PostProps {
 
 export interface DeletePostProps {
   postId: React.Key;
-  currentUser: string;
   userName: string;
 }
 
 export interface LikePostProps {
-  id: React.Key;
-  currentUser: string;
+  postId: React.Key;
   likes: string[];
 }

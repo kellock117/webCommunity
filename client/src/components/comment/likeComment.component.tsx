@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 
+import { AuthContext } from "../../context/authContext";
 import { GQL_LIKE_COMMENT } from "../../constants/comment";
 import { LikeCommentProps } from "../../interface/comment.interface";
 
@@ -8,16 +9,21 @@ import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Typography } from "@mui/material";
 
-const LikeComment = (props: LikeCommentProps) => {
-  const isUserLiked = props.likes.includes(props.currentUser);
-  let likeCount = isUserLiked ? props.likes.length - 1 : props.likes.length;
-  const [pressed, setPressed] = useState(isUserLiked);
+const LikeComment = ({ commentId, likes }: LikeCommentProps) => {
+  const {
+    user: { userName },
+  } = useContext(AuthContext);
+
+  const isUserLiked: boolean = likes.includes(userName);
+  let likeCount: number = isUserLiked ? likes.length - 1 : likes.length;
+
+  const [pressed, setPressed] = useState<boolean>(isUserLiked);
 
   const [likeComment] = useMutation(GQL_LIKE_COMMENT, {
-    variables: { commentId: props.id },
+    variables: { commentId: commentId },
   });
 
-  const handleSubmission = () => {
+  const handleSubmission = (): void => {
     setPressed(!pressed);
     likeComment();
   };

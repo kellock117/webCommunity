@@ -1,7 +1,9 @@
 import gql from "graphql-tag";
 
-export const LIKE = "like";
+export const LIKEPOST = "like post";
+export const LIKECOMMENT = "like comment";
 export const COMMENT = "comment";
+export const MENTION = "mention";
 
 export const GQL_GET_NOTIFICATIONS = gql`
   query GetNotifications {

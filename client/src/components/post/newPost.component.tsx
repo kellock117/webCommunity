@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
 
 import { useForm } from "../../util/hooks";
 import { GQL_CREATE_POST } from "../../constants/post";
 import { postsValue } from "../../context/postContext";
+import { errorValue } from "../../context/errorContext";
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -13,7 +13,6 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
@@ -24,26 +23,22 @@ const NewPost = () => {
     content: "",
   });
 
-  const [createPost, { data, loading, error }] = useMutation(GQL_CREATE_POST, {
+  const [createPost, { loading }] = useMutation(GQL_CREATE_POST, {
     variables: values,
+    onCompleted: data => {
+      postsValue([data.createPost, ...postsValue()]);
+    },
+    onError: error => {
+      errorValue(error);
+    },
   });
 
-  function createPostCallBack() {
+  function createPostCallBack(): void {
     createPost();
   }
 
-  useEffect(() => {
-    if (!loading) {
-      postsValue([data?.createPost, ...postsValue()]);
-    }
-  }, [data, loading]);
-
   if (loading) {
-    return <CircularProgress style={{ marginLeft: "40%" }} />;
-  }
-
-  if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
+    return <CircularProgress style={{ marginLeft: "50%" }} />;
   }
 
   return (

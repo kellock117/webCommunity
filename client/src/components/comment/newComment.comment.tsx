@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { isMobile } from "react-device-detect";
 import { useMutation } from "@apollo/react-hooks";
 
@@ -11,7 +10,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
+import { errorValue } from "../../context/errorContext";
+import { postsValue } from "../../context/postContext";
 
 const NewComment = ({ postId, setComments }: NewCommentProps) => {
   const { onChange, onSubmit, values } = useForm(createCommentCallback, {
@@ -19,29 +19,37 @@ const NewComment = ({ postId, setComments }: NewCommentProps) => {
     content: "",
   });
 
-  const [createComment, { data, loading, error }] = useMutation(
-    GQL_CREATE_COMMENT,
-    {
-      variables: values,
-    }
-  );
+  const [createComment, { loading }] = useMutation(GQL_CREATE_COMMENT, {
+    variables: values,
 
-  function createCommentCallback() {
+    onCompleted: data => {
+      setComments(current => [data.createComment, ...current]);
+
+      const posts = postsValue();
+      const commentedPost = { ...posts.find(post => post.id === postId) };
+      const comments = [...commentedPost.comments];
+      comments.push(data.createComment.id);
+
+      commentedPost.comments = comments;
+
+      const newPosts = posts.map(post =>
+        post.id === postId ? commentedPost : post
+      );
+
+      postsValue(newPosts);
+    },
+    onError: error => {
+      errorValue(error);
+    },
+  });
+
+  function createCommentCallback(): void {
     createComment();
   }
   const commentBoxSize: string = isMobile ? "29ch" : "49ch";
 
-  useEffect(() => {
-    if (data && !loading)
-      setComments(current => [data?.createComment, ...current]);
-  }, [data, loading, setComments]);
-
   if (loading) {
     return <CircularProgress style={{ marginLeft: "40%" }} />;
-  }
-
-  if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
   }
 
   return (

@@ -11,6 +11,7 @@ if (localStorage.getItem(process.env.REACT_APP_KEY)) {
   );
   if (decodedToken.exp * 1000 < Date.now()) {
     localStorage.removeItem(process.env.REACT_APP_KEY);
+    window.location.reload();
   } else {
     initialState.user = decodedToken;
   }

@@ -1,29 +1,19 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useReactiveVar } from "@apollo/client";
 
-import { AuthContext } from "../../context/authContext";
 import Post from "./post.component";
 import { postsValue } from "../../context/postContext";
 import { PostProps, PostsProps } from "../../interface/post.interface";
 
 import Grid from "@mui/material/Grid";
-import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
-import { useReactiveVar } from "@apollo/client";
 
 const theme = createTheme();
 
-const PostList = ({
-  loading,
-  error,
-  page,
-  lastPostId,
-  nextPage,
-  previousPage,
-}: PostsProps) => {
-  const { user } = useContext(AuthContext);
+const PostList = ({ page, lastPostId, nextPage, previousPage }: PostsProps) => {
   const posts = useReactiveVar(postsValue);
 
   const createLoadMoreButton = ({ marginLeft }: { marginLeft: boolean }) => {
@@ -52,14 +42,6 @@ const PostList = ({
     );
   }
 
-  if (loading) {
-    return <CircularProgress style={{ marginLeft: "40%" }} />;
-  }
-
-  if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
-  }
-
   // when the data is ready, store the last id for the pagination
   lastPostId.current = posts?.at(-1)?.id;
 
@@ -68,22 +50,22 @@ const PostList = ({
       <main>
         <Container maxWidth="md">
           <Grid container spacing={8} justifyContent="center">
-            {posts?.map((post: PostProps) => {
+            {posts.map((post: PostProps) => {
               return (
                 <Post
-                  key={post?.id}
-                  currentUser={user?.userName}
-                  userName={post?.userName}
-                  id={post?.id}
-                  title={post?.title}
-                  time={post?.time}
-                  content={post?.content}
-                  likes={post?.likes}
-                  comments={post?.comments}
+                  key={post.id}
+                  id={post.id}
+                  userName={post.userName}
+                  title={post.title}
+                  time={post.time}
+                  content={post.content}
+                  likes={post.likes}
+                  comments={post.comments}
                 />
               );
             })}
           </Grid>
+          {/* next page or previous page button */}
           {page === 1 ? (
             createLoadMoreButton({ marginLeft: true })
           ) : (

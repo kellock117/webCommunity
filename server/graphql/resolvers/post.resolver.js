@@ -1,7 +1,7 @@
 import Post from "../../models/post.model.js";
 import checkAuth from "../../util/authentication.js";
 import { createNotification } from "./notification.resolver.js";
-import { LIKE } from "../../constants/notification.js";
+import { LIKEPOST } from "../../constants/notification.js";
 
 const isNull = post => {
   if (post === null) throw new Error("Post not found");
@@ -84,7 +84,7 @@ const postResolver = {
           createNotification({
             userName: post.userName,
             postId: postId,
-            action: LIKE,
+            action: LIKEPOST,
             context: context,
           });
           return "liked";
